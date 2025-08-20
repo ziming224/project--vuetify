@@ -19,7 +19,6 @@
             <v-badge v-if="item.to === '/cart' && user.cartTotal > 0" color="red" :content="user.cartTotal" floating />
           </v-btn>
         </template>
-
         <v-btn v-if="user.isLoggedIn" prepend-icon="mdi-logout" @click="logout">登出</v-btn>
       </v-container>
     </v-app-bar>
@@ -35,6 +34,7 @@
   import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import AnimatedUnderline from '@/components/AnimatedUnderline.vue'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
 
@@ -64,8 +64,8 @@
     { title: 'HOME', to: '/', icon: 'mbi-home', show: true },
     { title: '救援單位', to: '/org', show: true },
     { title: '公益商城', to: '/shop', show: true },
-    { title: '會員登入', to: '/login', show: !user.isLoggedIn },
-    { title: '註冊', to: '/register', show: !user.isLoggedIn },
+    { title: '登入/註冊', to: '/auth', show: !user.isLoggedIn },
+    // { title: '註冊', to: '/register', show: !user.isLoggedIn },
     { title: '購物車', to: '/cart', show: user.isLoggedIn },
     { title: '管理', to: '/admin', show: user.isLoggedIn && user.isAdmin },
   ])

@@ -1,75 +1,81 @@
 <template>
-  <v-container fluid>
-    <!-- 放大顯示的卡片 -->
-    <v-dialog v-model="dialog" width="600">
-      <v-card v-if="selectedCard">
-        <v-toolbar>
-          <v-toolbar-title>{{ selectedCard.region }} - 卡片 {{ selectedCard.card }}</v-toolbar-title>
+  <v-container>
+    <!-- Row 1 -->
+    <CardCarousel class="mb-6" :items="items1" title="北部" @card-click="openDialog" />
+
+    <!-- Row 2 -->
+    <CardCarousel class="mb-6" :items="items2" title="中部" @card-click="openDialog" />
+
+    <!-- Row 3 -->
+    <CardCarousel :items="items3" title="南部" @card-click="openDialog" />
+    <!-- 點開畫面 -->
+    <v-dialog v-model="dialog" max-width="650px">
+      <v-card v-if="selected">
+        <v-img cover height="300px" :src="selected.image" />
+        <v-card-title>{{ selected.title }}</v-card-title>
+        <v-card-text>{{ selected.address }}</v-card-text>
+        <v-card-text>{{ selected.phone }}</v-card-text>
+        <v-card-text>{{ selected.detail }}</v-card-text>
+        <v-card-actions>
           <v-spacer />
-          <v-btn icon="mdi-close" @click="closeDialog" />
-        </v-toolbar>
-        <v-card-text class="d-flex justify-center align-center" style="height: 400px;">
-          <h2 class="text-h2">詳細內容</h2>
-        </v-card-text>
+          <v-btn color="primary" @click="dialog = false">關閉</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- 地區與輪播 -->
-    <v-row v-for="(region, index) in regions" :key="region.name" class="my-5">
-
-      <!-- 滑動區 -->
-      <v-col cols="12">
-        <v-slide-group
-          :ref="el => slideGroups[index] = el"
-          class="pa-2"
-          show-arrows
-        >
-          <v-slide-group-item
-            v-for="n in 10"
-            :key="n"
-          >
-            <v-card
-              class="ma-2"
-              color="#f2f2f2"
-              height="290"
-              width="400"
-              @click="openDialog(region.name, n)"
-            >
-              <v-card-text class="text-center">卡片 {{ n }}</v-card-text>
-            </v-card>
-          </v-slide-group-item>
-        </v-slide-group>
-      </v-col>
-
-    </v-row>
   </v-container>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
+  import { useSnackbar } from 'vuetify-use-dialog'
+  import CardCarousel from '@/components/CardCarousel.vue'
+  import orgService from '@/services/org'
 
-  const regions = [
-    { name: '北部' },
-    { name: '中部' },
-    { name: '南部' },
-  ]
+  const createSnackbar = useSnackbar()
 
-  const slideGroups = ref([])
-  const selectedCard = ref(null)
   const dialog = ref(false)
+  const selected = ref(null)
 
-  function openDialog (region, card) {
-    selectedCard.value = { region, card }
+  // 將 items1, items2, items3 初始化為空陣列，等待從後端獲取資料
+  const items1 = ref([])
+  const items2 = ref([])
+  const items3 = ref([])
+
+  const openDialog = item => {
+    selected.value = item
     dialog.value = true
   }
 
-  function closeDialog () {
-    selectedCard.value = null
-    dialog.value = false
+  // 獲取並處理組織資料的函式
+  const fetchOrgs = async () => {
+    try {
+      const { data } = await orgService.get()
+      // 後端回傳的資料結構是 { success: true, orgs: [...] }
+      // 並且 orgs 陣列中的物件包含 name, description, image 等欄位
+      const allOrgs = data.orgs.map(org => ({
+        title: org.name, // 將後端的 name 欄位對應到前端的 title
+        short: org.description, // 將後端的 description 對應到 short
+        detail: org.description, // 將後端的 description 對應到 detail
+        image: org.image,
+        category: org.category,
+      }))
+
+      // 根據 category 欄位將組織分類
+      // 請根據您後端的實際分類名稱修改以下字串
+      items1.value = allOrgs.filter(org => org.category === '北部')
+      items2.value = allOrgs.filter(org => org.category === '中部')
+      items3.value = allOrgs.filter(org => org.category === '南部')
+    } catch (error) {
+      console.error(error)
+      createSnackbar({
+        text: error?.response?.data?.message || '無法載入組織資料，請稍後再試',
+        snackbarProps: { color: 'red' },
+      })
+    }
   }
 
+  // 在元件掛載時呼叫 fetchOrgs
+  onMounted(fetchOrgs)
 </script>
 
-<style scoped>
-/* 如果不再需要，可以移除這裡的樣式 */
-</style>
+<style scoped></style>

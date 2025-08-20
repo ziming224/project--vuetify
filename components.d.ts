@@ -8,6 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AnimatedUnderline: typeof import('./src/components/AnimatedUnderline.vue')['default']
+    CardCarousel: typeof import('./src/components/CardCarousel.vue')['default']
+    OrgCard: typeof import('./src/components/OrgCard.vue')['default']
+    PetCard: typeof import('./src/components/PetCard.vue')['default']
     ProductCard: typeof import('./src/components/ProductCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

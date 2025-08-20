@@ -38,7 +38,7 @@
     <v-container class="my-12">
       <v-row justify="center">
         <v-col cols="12">
-          <h2 class="text-h4 text-center mb-8">遇見受傷貓狗的緊急應對SOP</h2>
+          <h2 class="text-h4 text-center mb-8">受傷貓狗的緊急應對SOP</h2>
         </v-col>
         <v-col cols="12">
           <v-timeline align="start" direction="horizontal" side="end">
