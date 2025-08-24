@@ -6,40 +6,53 @@
 
 // Composables
 import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 import { zhHant } from 'vuetify/locale'
-
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
-
 import 'vuetify/styles'
-
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
+  components,
+  directives,
   theme: {
-    defaultTheme: 'light', // 您可以在這裡設定預設主題，例如 'light' 或 'dark'
+    defaultTheme: 'light',
     themes: {
       light: {
-        dark: false, // 標示這不是深色主題
+        dark: false,
         colors: {
-          // --- Vuetify 預設顏色 ---
-          'primary': '#1867C0',
-          'secondary': '#5CBBF6',
-          // --- 您自訂的顏色 ---
-          'app-bar-scrolled-bg': '#C5E1A5', // 捲動後導覽列的背景色 (來自您 CSS 的 rgba(197, 225, 165, 0.8))
-          'app-bar-bg': '#C5E1A5', // 捲動後導覽列的背景色 (來自您 CSS 的 rgba(197, 225, 165, 0.8))
-          'nav-text': '#4E4E4E', // 導覽列文字顏色
-          'main-background': '#F5EFE6', // 主要內容區的背景色
+          primary: '#F5EFE6', // 主題色
+          secondary: '#424242', // 次要主題色（輔助元素）
+          accent: '#A7D7C5', // 輔助色（強調元素）
+          error: '#FF5252', // 錯誤狀態（錯誤訊息）
+          info: '#2196F3', // 資訊通知
+          success: '#4CAF50', // 成功狀態
+          warning: '#FFC107', // 警告狀態
+          background: '#F5EFE6', // 全局背景色
+          appBarBackground: '#fffde8c3', // 導覽列背景色
+          mainBackground: '#ffc46cff', // 主內容背景色
+          // sectionOrg: '#f2ffecff',
+          // 救援單位卡片顏色 (使用 accent)
+          // sectionShop: '#e6f5f0ff',
+          // 公益商城卡片顏色 (使用 primary)
+          // sectionLost: '#f7f6ffff',
+          // 遺失啟示卡片顏色 (使用 warning)
         },
       },
       dark: {
-        dark: true, // 標示這是深色主題
+        dark: true,
         colors: {
-          'primary': '#2196F3',
-          'secondary': '#54B6B2',
-          // --- 您自訂的顏色 (深色版本) ---
-          'app-bar-scrolled-bg': '#2E401E', // 深色模式下的導覽列背景
-          'nav-text': '#E0E0E0', // 深色模式下的導覽列文字
-          'main-background': '#121212', // 深色模式下的主要背景
+          primary: '#90CAF9',
+          secondary: '#B0BEC5',
+          accent: '#8C9EFF',
+          error: '#CF6679',
+          info: '#0288D1',
+          success: '#66BB6A',
+          warning: '#FFA726',
+          background: '#121212',
+          appBarBackground: '#1E1E1E',
+          mainBackground: '#121212',
         },
       },
     },

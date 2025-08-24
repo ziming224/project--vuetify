@@ -1,6 +1,10 @@
 <template>
+
   <v-app>
-    <v-app-bar app :class="appBarClass" flat scroll-behavior="elevate">
+ <!-- 🔹 Lottie Loading 元件畫面 -->
+<LoadingOverlay :show="loading" @update:show="loading = $event" />
+
+    <v-app-bar app flat scroll-behavior="fade-image">
       <v-img
         class="fixed-logo"
         contain
@@ -30,42 +34,34 @@
 </template>
 
 <script setup>
-  import { debounce } from 'lodash' // 需要安裝 lodash
-  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+  import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+  import { computed, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
-  import AnimatedUnderline from '@/components/AnimatedUnderline.vue'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
+import LoadingOverlay from '@/components/LoadingOverlay.vue'
 
   const user = useUserStore()
   const createSnackbar = useSnackbar()
   const router = useRouter()
-
   const logoSrc = '@/assets/logo.png'
 
-  const isScrolled = ref(false)
+  // 🔹 載入動畫狀態
+  const loading = ref(true)
 
-  const handleScroll = debounce(() => {
-    isScrolled.value = window.scrollY > 50
-  }, 100)
-
+  // 模擬載入完成 (可改成 API 完成後再關閉)
   onMounted(() => {
-    window.addEventListener('scroll', handleScroll)
+    setTimeout(() => {
+      loading.value = false
+    }, 2000)
   })
-
-  onBeforeUnmount(() => {
-    window.removeEventListener('scroll', handleScroll)
-  })
-
-  const appBarClass = computed(() => (isScrolled.value ? 'scrolled-app-bar' : 'top-app-bar'))
 
   const navItems = computed(() => [
-    { title: 'HOME', to: '/', icon: 'mbi-home', show: true },
+    { title: 'HOME', to: '/', icon: 'mdi-home', show: true },
     { title: '救援單位', to: '/org', show: true },
     { title: '公益商城', to: '/shop', show: true },
     { title: '登入/註冊', to: '/auth', show: !user.isLoggedIn },
-    // { title: '註冊', to: '/register', show: !user.isLoggedIn },
     { title: '購物車', to: '/cart', show: user.isLoggedIn },
     { title: '管理', to: '/admin', show: user.isLoggedIn && user.isAdmin },
   ])
@@ -86,28 +82,14 @@
 </script>
 
 <style scoped>
-.v-app-bar.v-toolbar {
-  transition: background-color 0.4s ease, box-shadow 0.4s ease !important;
-  z-index: 1000 !important; /* 確保導覽列在最上層 */
-}
-
-.top-app-bar {
-  background-color: transparent !important;
-}
-
-.scrolled-app-bar {
-  background-color: rgba(var(--v-theme-app-bar-scrolled-bg-rgb), 0.8) !important;
-}
-
 .main-background {
   background-color: rgb(var(--v-theme-main-background));
 }
-
-.fixed-logo {
-  padding: 10px;
-  border-radius: 10px;
+.mySwiper {
+  width: 100%;
+  padding: 20px 40px;
+  position: relative;
 }
-
 @media (max-width: 600px) {
   .fixed-logo {
     max-height: 60px;
@@ -116,12 +98,10 @@
     left: 10px;
   }
 }
-
 .nav-btn {
   position: relative;
   overflow: hidden;
 }
-
 .nav-btn::after {
   content: '';
   position: absolute;
@@ -133,8 +113,14 @@
   background-color: currentColor;
   transition: width 0.3s ease-in-out;
 }
-
 .nav-btn.v-btn--active::after {
   width: 50%;
+}
+.v-app-bar {
+  position: fixed !important;
+  z-index: 1000 !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: var(--v-app-bar-background);
 }
 </style>

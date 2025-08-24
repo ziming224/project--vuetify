@@ -10,10 +10,15 @@ declare module 'vue' {
   export interface GlobalComponents {
     AnimatedUnderline: typeof import('./src/components/AnimatedUnderline.vue')['default']
     CardCarousel: typeof import('./src/components/CardCarousel.vue')['default']
+    CourseCard: typeof import('./src/components/CourseCard.vue')['default']
+    GlowingCard: typeof import('./src/components/GlowingCard.vue')['default']
+    LoadingOverlay: typeof import('./src/components/LoadingOverlay.vue')['default']
     OrgCard: typeof import('./src/components/OrgCard.vue')['default']
     PetCard: typeof import('./src/components/PetCard.vue')['default']
     ProductCard: typeof import('./src/components/ProductCard.vue')['default']
+    RainbowButton: typeof import('./src/components/RainbowButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ThreeDCard: typeof import('./src/components/ThreeDCard.vue')['default']
   }
 }

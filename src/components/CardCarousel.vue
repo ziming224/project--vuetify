@@ -11,15 +11,22 @@
       :slides-per-view="3"
       :space-between="20"
     >
-      <swiper-slide v-for="(item, i) in items" :key="i">
+      <swiper-slide v-for="(item, i) in items" :key="i" style="height: auto">
         <v-card
+          class="d-flex flex-column h-100"
           elevation="4"
           hover
           @click="$emit('card-click', item)"
         >
-          <v-img cover height="200px" :src="item.image" />
-          <v-card-title>{{ item.title }}</v-card-title>
-          <v-card-text>{{ item.short }}</v-card-text>
+          <v-img height="200px" :src="item.image" />
+          <v-card-title class="pt-4">{{ item.title }}</v-card-title>
+          <v-card-subtitle>{{ item.short }}</v-card-subtitle>
+          <v-card-text class="flex-grow-1" style="font-size: 1.1rem;">地址：{{ item.address }}</v-card-text>
+          <v-card-text class="flex-grow-1" style="font-size: 1.1rem;">聯繫方式：{{ item.phone }}</v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn>查看更多</v-btn>
+          </v-card-actions>
         </v-card>
       </swiper-slide>
     </swiper>

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- ... v-parallax ... -->
     <v-parallax
       height="600"
       src="@/assets/dogcat.jpg"
@@ -12,7 +13,7 @@
           毛孩救援站
         </h1>
         <h4 ref="subtitleRef" class="subheading text-h5">
-          給他們一個溫暖的家
+          我們無法拯救全世界所有的毛孩，但我們可以改變一個毛孩的全世界。
         </h4>
       </div>
     </v-parallax>
@@ -20,8 +21,9 @@
     <v-container class="my-12">
       <v-row>
         <v-col v-for="section in sections" :key="section.to" cols="12" md="4">
-          <v-card
-            class="d-flex flex-column align-center justify-center text-center pa-6"
+          <v-Card
+            class="d-flex flex-column justify-center align-center text-center section-card"
+            :color="section.color"
             height="250"
             hover
             :href="section.href"
@@ -30,7 +32,7 @@
             <v-icon class="mb-4" :icon="section.icon" size="64" />
             <v-card-title class="text-h5">{{ section.title }}</v-card-title>
             <v-card-subtitle>{{ section.subtitle }}</v-card-subtitle>
-          </v-card>
+          </v-Card>
         </v-col>
       </v-row>
     </v-container>
@@ -38,50 +40,51 @@
     <v-container class="my-12">
       <v-row justify="center">
         <v-col cols="12">
-          <h2 class="text-h4 text-center mb-8">受傷貓狗的緊急應對SOP</h2>
-        </v-col>
-        <v-col cols="12">
-          <v-timeline align="start" direction="horizontal" side="end">
-            <v-timeline-item
-              v-for="item in sopItems"
-              :key="item.title"
-              :dot-color="item.color"
-              fill-dot
-              :icon="item.icon"
-            >
-              <v-card width="400">
-                <v-img
-                  cover
-                  height="200"
-                  :src="item.image"
-                />
-                <v-card-title :class="['text-h6', `bg-${item.color}`]">
-                  {{ item.title }}
-                </v-card-title>
-                <v-card-text class="bg-white text--primary" style="height: 220px; overflow-y: auto;">
-                  <p class="mt-2" style="white-space: pre-line;">
-                    {{ item.text }}
-                  </p>
-                </v-card-text>
-              </v-card>
-            </v-timeline-item>
-          </v-timeline>
+          <h2 class="text-h4 text-center mb-8 sop-title">受傷貓狗的緊急應對SOP</h2>
         </v-col>
       </v-row>
+      <template v-for="(item, index) in sopItems" :key="item.title">
+        <v-row class="align-center my-8 my-md-12 sop-row">
+          <v-col cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 1 : 2) : 1">
+            <v-img :src="item.image" class="rounded-lg elevation-8" aspect-ratio="1" cover />
+          </v-col>
+          <v-col cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 2 : 1) : 2">
+            <div class="pa-md-8 py-4">
+              <div class="d-flex align-center mb-4">
+                <v-avatar :color="item.color" size="64" class="mr-4 elevation-4">
+                  <v-icon v-if="item.icon" :icon="item.icon" color="white" size="40" />
+                  <span v-else class="text-h5 font-weight-bold text-white">{{ index + 1 }}</span>
+                </v-avatar>
+                <div>
+                  <div class="text-overline" :class="`text-${item.color}`">STEP {{ index + 1 }}</div>
+                  <h3 class="text-h5 font-weight-bold">{{ item.title }}</h3>
+                </div>
+              </div>
+              <p class="text-body-1 mt-4" style="white-space: pre-line;">{{ item.text }}</p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-divider v-if="index < sopItems.length - 1" class="my-4" />
+      </template>
     </v-container>
   </div>
 </template>
 
 <script setup>
-  import gsap from 'gsap'
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import { onMounted, ref } from 'vue'
+  import { useDisplay } from 'vuetify'
   import sopImage1 from '@/assets/sop/1.png'
   import sopImage2 from '@/assets/sop/2.png'
   import sopImage3 from '@/assets/sop/3.png'
   import sopImage4 from '@/assets/sop/4.png'
 
+  gsap.registerPlugin(ScrollTrigger)
+
   const titleRef = ref(null)
   const subtitleRef = ref(null)
+  const { mdAndUp } = useDisplay()
 
   onMounted(() => {
     // 使用 GSAP 建立動畫
@@ -95,11 +98,47 @@
     gsap.from(subtitleRef.value, {
       duration: 1.5, y: 50, opacity: 0, ease: 'power3.out', delay: 0.5, // 延遲 0.5 秒開始
     })
+
+    // 分頁連結卡片動畫
+    gsap.from('.section-card', {
+      scrollTrigger: {
+        trigger: '.section-card',
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+      },
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      stagger: 0.2,
+      ease: 'power3.out',
+    })
+
+    // SOP 標題動畫
+    gsap.from('.sop-title', {
+      scrollTrigger: {
+        trigger: '.sop-title',
+        start: 'top 80%',
+        toggleActions: 'play none none none',
+      },
+      opacity: 0,
+      y: 50,
+      duration: 1,
+      ease: 'power3.out',
+    })
+
+    // SOP 區塊動畫
+    const sopRows = gsap.utils.toArray('.sop-row')
+    sopRows.forEach(row => {
+      gsap.from(row.children, {
+        scrollTrigger: { trigger: row, start: 'top 85%', toggleActions: 'play none none none' },
+        opacity: 0, y: 50, duration: 0.8, stagger: 0.2, ease: 'power3.out',
+      })
+    })
   })
   const sections = ref([
-    { title: '救援單位', subtitle: '查看所有合作的救援單位', icon: 'mdi-home-heart', to: '/org' },
-    { title: '公益商城', subtitle: '購物同時做公益', icon: 'mdi-store', to: '/shop' },
-    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-account-group', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1' },
+    { title: '救援單位', subtitle: '查看所有救援單位', icon: 'mdi-home-heart', to: '/org', color: 'sectionOrg' },
+    { title: '公益商城', subtitle: '購物同時做公益', icon: 'mdi-store', to: '/shop', color: 'sectionShop' },
+    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-account-group', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1', color: 'sectionLost' },
   ])
 
   const sopItems = ref([
@@ -120,7 +159,7 @@
     {
       title: '第三步：提供基本協助（安全前提下）',
       text: '提供飲水： 如果動物意識清楚且不會攻擊，可以在牠面前放置一小碗清水，不要強行灌食。\n\n保暖與安撫： 若天氣寒冷，可用毛巾或外套輕輕蓋在動物身上保暖。\n\n避免移動： 除非動物處於立即的危險中，否則盡量不要移動牠，以免加重傷勢。',
-      icon: 'mdi-first-aid',
+      icon: '',
       color: 'primary',
       image: sopImage3,
     },
@@ -133,6 +172,17 @@
     },
   ])
 </script>
+
+<style scoped>
+.section-card {
+  transition: transform 0.2s ease-in-out;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+}
+.section-card:hover {
+  transform: translateY(-10px);
+}
+</style>
 
 <route lang="yaml">
   meta:
