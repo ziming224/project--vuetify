@@ -6,16 +6,38 @@
     title="公益商城"
   />
 
-  <v-container>
-    <!-- Page Title -->
-    <!-- <v-row class="my-5">
-      <v-col class="text-center" cols="12">
-        <h1 class="text-h3 font-weight-bold">公益商城</h1>
-        <h4 class="text-h6 font-weight-light text-medium-emphasis">您的每一次消費，都在為毛孩們累積幸福</h4>
+ <v-container class="announcement-container my-8" fluid>
+    <v-row justify="center">
+      <v-col cols="12" md="8">
+        <v-card
+          class="pa-4 announcement-card"
+          elevation="4"
+        >
+          <v-row align="center" no-gutters>
+            <!-- 左邊icon -->
+            <v-col cols="2" class="text-center">
+              <v-icon size="40" color="primary">mdi-bullhorn</v-icon>
+            </v-col>
+
+            <!-- 公告文字 -->
+            <v-col cols="10">
+              <h2 class="mb-2 text-h4">本月公益合作捐贈單位</h2>
+              <p>在本賣場消費之商品都會捐贈與該月合作單位</p>
+              <p>每月合作對象以公告單位為準</p>
+              <p class="mb-1 text-h6">
+                💝 本月商品將捐贈給 <strong>{{ donationUnit.name }}</strong>
+              </p>
+              <small class="text-grey">
+                {{ donationUnit.description }}
+              </small>
+            </v-col>
+          </v-row>
+        </v-card>
       </v-col>
     </v-row>
-    -->
+  </v-container>
 
+  <v-container>
     <!-- Filters and Sorting -->
     <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
@@ -138,6 +160,11 @@
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
 
+
+const donationUnit = ref({
+  name: '浪浪狗狗之家',
+  description: '致力於救援與照顧流浪動物'
+})
   const heroSection = ref(null)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
@@ -239,6 +266,8 @@
     }
   }
 
+
+
   gsap.registerPlugin(ScrollTrigger)
   onMounted(() => {
     const el = heroSection.value
@@ -281,6 +310,23 @@
   text-align: center;
   color: white;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.announcement-card {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f5efe6, #a7d7c5);
+  color: #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: float 4s ease-in-out infinite;
+}
+.announcement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+@keyframes float {
+  0%   { transform: translateY(0px); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
 }
 </style>
 

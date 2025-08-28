@@ -13,6 +13,7 @@
     "@boindil/vue-file-agent-next": "^1.0.5",
     "@fontsource/roboto": "5.2.6",
     "@lottiefiles/dotlottie-vue": "^0.9.1",
+    "@lottiefiles/lottie-player": "^2.0.12",
     "@mdi/font": "7.4.47",
     "@vueuse/core": "^13.7.0",
     "@vueuse/motion": "^3.0.3",

@@ -1,9 +1,18 @@
 <template>
-  <HeroSection
-    :image-src="heroImage"
-    subtitle="如遇見傷勢嚴重或需要緊急協助的毛孩，能參考以下單位聯絡"
-    title="民間貓狗救援團體"
-  />
+  <v-container class="hero-section d-flex align-center justify-center" fluid>
+    <div class="overlay" />
+    <!-- 毛玻璃層 -->
+    <!-- 文字內容 -->
+    <div class="text-center content">
+      <h1 class="text-h2 font-weight-bold mb-5">民間貓狗救援團體</h1>
+      <p class="text-h5 font-weight-regular">
+        遇見受傷嚴重貓狗可以參考以下救援團體 <br>
+        若無明顯外傷需要安置能撥打1959台灣全國統一的動物保護專線，或1999市民服務熱線
+      </p>
+
+    </div>
+  </v-container>
+
   <v-container>
     <!-- Row 1: 北部 -->
     <div class="text-center my-8 my-md-12">
@@ -246,4 +255,41 @@
     text-decoration: underline;
   }
 
+.hero-section {
+  position: relative;
+  min-height: 80vh;
+  background: url('@/assets/hero-org.jpg') no-repeat center center;
+  background-size: cover;
+  color: white;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+   /* 半透明黑，讓文字更清楚 */
+  backdrop-filter: blur(3px); /* 毛玻璃模糊 */
+}
+
+.content {
+  position: relative; /* 確保文字在 overlay 上面 */
+  z-index: 1;
+}
+
+.content h1, .content p {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1s ease forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+p {
+  line-height: 1.7;
+}
 </style>

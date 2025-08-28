@@ -14,16 +14,11 @@ declare module 'vue' {
     CardContainer: typeof import('./src/components/3D/CardContainer.vue')['default']
     CardItem: typeof import('./src/components/3D/CardItem.vue')['default']
     CardSpotlight: typeof import('./src/components/CardSpotlight.vue')['default']
-    CourseCard: typeof import('./src/components/CourseCard.vue')['default']
     GlowingCard: typeof import('./src/components/GlowingCard.vue')['default']
     HeroSection: typeof import('./src/components/HeroSection.vue')['default']
     LoadingOverlay: typeof import('./src/components/LoadingOverlay.vue')['default']
-    OrgCard: typeof import('./src/components/OrgCard.vue')['default']
-    PetCard: typeof import('./src/components/PetCard.vue')['default']
     ProductCard: typeof import('./src/components/ProductCard.vue')['default']
-    RainbowButton: typeof import('./src/components/RainbowButton.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    ThreeDCard: typeof import('./src/components/ThreeDCard.vue')['default']
   }
 }
