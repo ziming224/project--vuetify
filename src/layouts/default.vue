@@ -1,10 +1,10 @@
 <template>
 
   <v-app>
- <!-- 🔹 Lottie Loading 元件畫面 -->
-<LoadingOverlay :show="loading" @update:show="loading = $event" />
+    <!-- 🔹 Lottie Loading 元件畫面 -->
+    <LoadingOverlay :show="loading" @update:show="loading = $event" />
 
-    <v-app-bar app flat scroll-behavior="fade-image">
+    <v-app-bar app class="underline from left" flat scroll-behavior="fade-image">
       <v-img
         class="fixed-logo"
         contain
@@ -38,9 +38,9 @@
   import { computed, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import LoadingOverlay from '@/components/LoadingOverlay.vue'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
-import LoadingOverlay from '@/components/LoadingOverlay.vue'
 
   const user = useUserStore()
   const createSnackbar = useSnackbar()

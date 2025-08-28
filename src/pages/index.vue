@@ -2,7 +2,7 @@
   <div>
     <!-- ... v-parallax ... -->
     <v-parallax
-      height="600"
+      height="900"
       src="@/assets/dogcat.jpg"
     >
       <div class="d-flex flex-column fill-height justify-center align-center text-white">
@@ -18,6 +18,7 @@
       </div>
     </v-parallax>
     <!-- 分頁連結 -->
+
     <v-container class="my-12">
       <v-row>
         <v-col v-for="section in sections" :key="section.to" cols="12" md="4">
@@ -36,6 +37,7 @@
         </v-col>
       </v-row>
     </v-container>
+
     <!-- SOP -->
     <v-container class="my-12">
       <v-row justify="center">
@@ -45,14 +47,19 @@
       </v-row>
       <template v-for="(item, index) in sopItems" :key="item.title">
         <v-row class="align-center my-8 my-md-12 sop-row">
-          <v-col cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 1 : 2) : 1">
-            <v-img :src="item.image" class="rounded-lg elevation-8" aspect-ratio="1" cover />
+          <v-col class="pa-4 pa-md-10" cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 1 : 2) : 1">
+            <v-img
+              aspect-ratio="1"
+              class="blob-shape elevation-8"
+              cover
+              :src="item.image"
+            />
           </v-col>
           <v-col cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 2 : 1) : 2">
             <div class="pa-md-8 py-4">
               <div class="d-flex align-center mb-4">
-                <v-avatar :color="item.color" size="64" class="mr-4 elevation-4">
-                  <v-icon v-if="item.icon" :icon="item.icon" color="white" size="40" />
+                <v-avatar class="mr-4 elevation-4" :color="item.color" size="64">
+                  <v-icon v-if="item.icon" color="white" :icon="item.icon" size="40" />
                   <span v-else class="text-h5 font-weight-bold text-white">{{ index + 1 }}</span>
                 </v-avatar>
                 <div>
@@ -107,7 +114,7 @@
         toggleActions: 'play none none none',
       },
       opacity: 0,
-      y: 50,
+      // y: 50,
       duration: 0.8,
       stagger: 0.2,
       ease: 'power3.out',
@@ -128,17 +135,17 @@
 
     // SOP 區塊動畫
     const sopRows = gsap.utils.toArray('.sop-row')
-    sopRows.forEach(row => {
+    for (const row of sopRows) {
       gsap.from(row.children, {
         scrollTrigger: { trigger: row, start: 'top 85%', toggleActions: 'play none none none' },
         opacity: 0, y: 50, duration: 0.8, stagger: 0.2, ease: 'power3.out',
       })
-    })
+    }
   })
   const sections = ref([
     { title: '救援單位', subtitle: '查看所有救援單位', icon: 'mdi-home-heart', to: '/org', color: 'sectionOrg' },
     { title: '公益商城', subtitle: '購物同時做公益', icon: 'mdi-store', to: '/shop', color: 'sectionShop' },
-    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-account-group', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1', color: 'sectionLost' },
+    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-account-group', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1' },
   ])
 
   const sopItems = ref([
@@ -171,6 +178,7 @@
       image: sopImage4,
     },
   ])
+
 </script>
 
 <style scoped>
@@ -182,6 +190,17 @@
 .section-card:hover {
   transform: translateY(-10px);
 }
+
+.blob-shape {
+  border:20px double #A7D7C5;
+border-radius: 40% 40% 30% 30%;
+ transition: all 0.5s ease-in-out;
+}
+
+/* .sop-row:hover .blob-shape {
+  border-radius: 37% 63% 46% 54% / 48% 55% 45% 52%;
+  transform: rotate(3deg);
+} */
 </style>
 
 <route lang="yaml">

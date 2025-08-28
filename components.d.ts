@@ -9,9 +9,14 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AnimatedUnderline: typeof import('./src/components/AnimatedUnderline.vue')['default']
+    CardBody: typeof import('./src/components/3D/CardBody.vue')['default']
     CardCarousel: typeof import('./src/components/CardCarousel.vue')['default']
+    CardContainer: typeof import('./src/components/3D/CardContainer.vue')['default']
+    CardItem: typeof import('./src/components/3D/CardItem.vue')['default']
+    CardSpotlight: typeof import('./src/components/CardSpotlight.vue')['default']
     CourseCard: typeof import('./src/components/CourseCard.vue')['default']
     GlowingCard: typeof import('./src/components/GlowingCard.vue')['default']
+    HeroSection: typeof import('./src/components/HeroSection.vue')['default']
     LoadingOverlay: typeof import('./src/components/LoadingOverlay.vue')['default']
     OrgCard: typeof import('./src/components/OrgCard.vue')['default']
     PetCard: typeof import('./src/components/PetCard.vue')['default']

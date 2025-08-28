@@ -6,7 +6,6 @@
 
 // Composables
 import { createApp } from 'vue'
-
 // Plugins
 import { registerPlugins } from '@/plugins'
 
@@ -14,6 +13,8 @@ import { registerPlugins } from '@/plugins'
 import App from './App.vue'
 
 import vuetify from './plugins/vuetify'
+
+import './assets/main.css'
 // Styles
 import 'unfonts.css'
 

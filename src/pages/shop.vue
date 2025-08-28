@@ -1,61 +1,80 @@
 <template>
+  <!-- Hero Banner -->
+  <HeroSection
+    :image-src="heroImage"
+    subtitle="您的每一次消費，都在為毛孩們累積幸福"
+    title="公益商城"
+  />
+
   <v-container>
-    <v-row justify="center">
-      <v-col cols="12">
-        <!-- 商品搜尋輸入框 -->
-        <v-text-field
-          v-model="search"
-          flat
-          hide-details
-          placeholder="搜尋商品"
-          prepend-inner-icon="mdi-magnify"
-          variant="solo"
-          @update:model-value="page = 1"
-        />
-        <!-- 商品分類與排序控制項 -->
-        <v-chip-group v-model="selectedCategory" mandatory @update:model-value="page = 1">
-          <!-- "全部" 分類按鈕 -->
-          <v-chip
-            filter
-            text="全部"
-            :value="''"
-            variant="outlined"
-          />
-          <!-- 動態生成其他分類按鈕 -->
+    <!-- Page Title -->
+    <!-- <v-row class="my-5">
+      <v-col class="text-center" cols="12">
+        <h1 class="text-h3 font-weight-bold">公益商城</h1>
+        <h4 class="text-h6 font-weight-light text-medium-emphasis">您的每一次消費，都在為毛孩們累積幸福</h4>
+      </v-col>
+    </v-row>
+    -->
+
+    <!-- Filters and Sorting -->
+    <v-row align="center" class="mb-4">
+      <v-col cols="12" md="8">
+        <v-chip-group v-model="selectedCategory" mandatory selected-class="text-primary" @update:model-value="page = 1">
+          <v-chip filter :value="''" variant="outlined">
+            全部
+          </v-chip>
           <v-chip
             v-for="option in categoryOptions"
             :key="option"
             filter
-            :text="option"
             :value="option"
             variant="outlined"
-          />
-          <v-spacer />
-          <!-- 排序選項選單 -->
-          <v-menu>
-            <template #activator="{ props }">
-              <v-btn
-                v-bind="props"
-                append-icon="mdi-chevron-down"
-                :ripple="false"
-                variant="text"
-              >
-                {{ sortOptions[selectedSort].text }}
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item
-                v-for="(option, i) in sortOptions"
-                :key="option.text"
-                @click="selectedSort = i; page = 1"
-              >
-                {{ option.text }}
-              </v-list-item>
-            </v-list>
-          </v-menu>
+          >
+            {{ option }}
+          </v-chip>
         </v-chip-group>
       </v-col>
-      <!-- 商品卡片列表 -->
+      <v-col class="d-flex align-center" cols="12" md="4">
+        <v-text-field
+          v-model="search"
+          class="mr-2"
+          clearable
+          density="compact"
+          flat
+          hide-details
+          placeholder="搜尋商品"
+          prepend-inner-icon="mdi-magnify"
+          variant="solo-filled"
+          @update:model-value="page = 1"
+        />
+        <v-menu>
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              icon="mdi-sort"
+              :ripple="false"
+              variant="text"
+            />
+            {{ sortOptions[selectedSort].text }}
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="(option, i) in sortOptions"
+              :key="option.text"
+              :active="selectedSort === i"
+              @click="selectedSort = i; page = 1"
+            >
+              <v-list-item-title>{{ option.text }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-col>
+    </v-row>
+
+    <v-divider class="mb-8" />
+
+    <!-- Products Grid -->
+    <v-row v-if="filteredProducts.length > 0">
       <v-col
         v-for="product in currentPageProducts"
         :key="product._id"
@@ -63,9 +82,12 @@
         lg="4"
         md="6"
       >
-        <ProductCard v-bind="product" />
+        <!-- <ProductCard v-bind="product" /> -->
+        <ProductCard
+          v-bind="product"
+          @add-to-cart="handleAddToCart(product._id)"
+        />
       </v-col>
-      <!-- 分頁控制項 -->
       <v-col cols="12">
         <v-pagination
           v-model="page"
@@ -73,88 +95,107 @@
           :length="totalPages"
           :total-visible="5"
         />
-      </v-col></v-row>
+      </v-col>
+    </v-row>
+
+    <!-- Empty State -->
+    <v-row v-else>
+      <v-col cols="12">
+        <v-empty-state
+          headline="噢！找不到商品"
+          icon="mdi-magnify-remove-outline"
+          text="試試看更換篩選條件或關鍵字吧！"
+          title="無符合條件的商品"
+        />
+      </v-col>
+    </v-row>
+
+    <!-- Pagination -->
+    <!-- <v-row v-if="totalPages > 1" class="mt-8">
+      <v-col>
+        <v-pagination
+          v-model="page"
+          circle
+          :length="totalPages"
+          :total-visible="5"
+        />
+      </v-col>
+    </v-row> -->
+
   </v-container>
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue'
+  import gsap from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  import { computed, onMounted, ref, watch } from 'vue'
+  import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import heroImage from '@/assets/dog-face.jpg'
+  import HeroSection from '@/components/HeroSection.vue'
   import ProductCard from '@/components/ProductCard.vue'
   import productService from '@/services/product'
+  import userService from '@/services/user'
+  import { useUserStore } from '@/stores/user'
 
-  // 建立 snackbar 實例，用於顯示通知
+  const heroSection = ref(null)
   const createSnackbar = useSnackbar()
+  const user = useUserStore()
+  const router = useRouter()
 
-  // 響應式變數，儲存從 API 獲取的所有商品
   const products = ref([])
-
-  // 過濾後的商品列表 (computed)
-  // 這個 computed property 會根據搜尋、分類和排序選項動態更新
   const filteredProducts = computed(() => {
     return products.value.filter(product => {
-      // 根據搜尋文字過濾商品名稱
       const matchesSearch = product.name.toLowerCase().includes(search.value.toLowerCase())
-      // 根據選擇的分類過濾
       const matchesCategory = selectedCategory.value ? product.category === selectedCategory.value : true
       return matchesSearch && matchesCategory
     }).sort((a, b) => {
       // .sort()
-      // return 0  => 順序不變
-      // return < 0 => a 在前
-      // return > 0 => b 在前
-      // return a - b => 正序
-      // return b - a => 倒序
-
+      // return 0 順序不變
+      // return < 0     a 在前
+      // return > 0     b 在前
+      // return a - b   正序
+      // return b - a   倒序
       // 根據選擇的排序選項進行排序
-      // sortOptions[selectedSort.value] 會是選到的排序選項，例如 { text: '名稱', key: 'name', direction: 1 }
+      // sortOptions[selectedSort.value] 會是選到的排序選項
+      // { text: '名稱', key: 'name', direction: 1 }
       const sortOption = sortOptions[selectedSort.value]
-
       // 如果是日期的排序
       if (sortOption.key === 'createdAt' || sortOption.key === 'updatedAt') {
         // 使用 new Date() 轉換日期字串為日期物件，然後進行比較
         return sortOption.direction * (new Date(a[sortOption.key]) - new Date(b[sortOption.key]))
       }
-      // 其他情況（名稱、價格）直接比較
       return sortOption.direction * (a[sortOption.key] > b[sortOption.key] ? 1 : -1)
     })
   })
 
-  // --- 分頁邏輯 ---
-  // 每頁顯示的商品數量
-  const ITEMS_PER_PAGE = 12
-  // 當前頁碼
+  const ITEMS_PER_PAGE = 9
   const page = ref(1)
-  // 總頁數 (computed)
   const totalPages = computed(() => {
     return Math.ceil(filteredProducts.value.length / ITEMS_PER_PAGE)
   })
-  // 當前頁面應顯示的商品 (computed)
   const currentPageProducts = computed(() => {
     // .slice(開始索引, 結束索引)
     // 從開始索引取到結束索引，不包含結束
-    // 一頁 10 筆
-    // 第 1 頁 = 0 ~ 9 = .slice(0, 10)
-    // 第 2 頁 = 10 ~ 19 = .slice(10, 20)
-    // 第 3 頁 = 20 ~ 29 = .slice(20, 30)
+    // 一頁 12 筆
+    // 第 1 頁 = 0 ~ 11 = .slice(0, 12)
+    // 第 2 頁 = 12 ~ 23 = .slice(12, 24)
+    // 第 3 頁 = 24 ~ 35 = .slice(24, 36)
     return filteredProducts.value.slice((page.value - 1) * ITEMS_PER_PAGE, page.value * ITEMS_PER_PAGE)
   })
 
-  // --- 篩選與排序邏輯 ---
-  // 搜尋文字
   const search = ref('')
 
-  // 已選擇的分類
   const selectedCategory = ref('')
-  // 分類選項
   const categoryOptions = ['貓用', '狗用']
 
-  // 已選擇的排序選項索引
+  // 選擇的排序選項索引
   const selectedSort = ref(0)
-  // 排序選項陣列
+  // 排序選項
   // text: 顯示的文字
-  // key: 用於排序的商品物件屬性
-  // direction: 排序方向，1 為升序 (asc)，-1 為降序 (desc)
+  // key: 排序的鍵
+  // direction: 排序方向，1 為升序，-1 為降序
+  // 使用 key 和 direction 來排序 products
   const sortOptions = [
     { text: '名稱', key: 'name', direction: 1 },
     { text: '價格：低到高', key: 'price', direction: 1 },
@@ -163,16 +204,11 @@
     { text: '最舊商品', key: 'createdAt', direction: 1 },
   ]
 
-  // --- API 請求 ---
-  // 異步函式，用於獲取所有商品資料
   const getProducts = async () => {
     try {
-      // 呼叫 product service 的 get 方法
       const { data } = await productService.get()
-      // 將獲取的商品資料存入 products ref
       products.value = data.products
     } catch (error) {
-      // 處理錯誤情況
       console.error('Error fetching products:', error)
       createSnackbar({
         text: '無法載入商品資料',
@@ -182,9 +218,71 @@
       })
     }
   }
-  // 元件建立時立即獲取商品資料
   getProducts()
+
+  const handleAddToCart = async productId => {
+    if (!user.isLogin) {
+      router.push('/auth')
+      return
+    }
+    try {
+      await userService.cart({ product: productId, quantity: 1 })
+      createSnackbar({
+        text: '已加入購物車',
+        snackbarProps: { color: 'success' },
+      })
+    } catch (error) {
+      createSnackbar({
+        text: error.response?.data?.message || '加入購物車失敗',
+        snackbarProps: { color: 'red' },
+      })
+    }
+  }
+
+  gsap.registerPlugin(ScrollTrigger)
+  onMounted(() => {
+    const el = heroSection.value
+
+    gsap.fromTo(
+      el,
+      { scale: 1, y: 0 },
+      {
+        scale: 0.5, // 縮小到一半
+        y: -200, // 上移
+        transformOrigin: 'top center',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+          pin: true, // 🚀 這裡關鍵，會固定在上方
+          pinSpacing: false, // 避免多餘空白
+        },
+      },
+    )
+  })
 </script>
+
+<style scoped>
+.hero-section {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-img {
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 20vh;
+}
+
+.hero-text {
+  text-align: center;
+  color: white;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+</style>
 
 <route lang="yaml">
   meta:

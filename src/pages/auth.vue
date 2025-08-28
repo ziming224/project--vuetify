@@ -1,95 +1,126 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="12" lg="6" md="8">
-        <v-card>
-          <v-tabs v-model="tab" color="primary" grow>
-            <v-tab value="login">登入</v-tab>
-            <v-tab value="register">註冊</v-tab>
-          </v-tabs>
-          <v-window v-model="tab">
-            <!-- 登入表單 -->
-            <v-window-item value="login">
-              <v-card-text>
-                <v-form :disabled="loginForm.isSubmitting.value" @submit.prevent="login">
-                  <v-text-field
-                    v-model="loginAccount.value.value"
-                    :error-messages="loginAccount.errorMessage.value"
-                    label="帳號或信箱"
-                    required
-                  />
-                  <v-text-field
-                    v-model="loginPassword.value.value"
-                    counter
-                    :error-messages="loginPassword.errorMessage.value"
-                    label="密碼"
-                    maxlength="20"
-                    minlength="4"
-                    required
-                    type="password"
-                  />
-                  <v-btn block color="primary" :loading="loginForm.isSubmitting.value" type="submit">登入</v-btn>
-                </v-form>
-              </v-card-text>
-            </v-window-item>
+  <v-parallax
+    height="calc(100vh - 64px)"
+    :src="authBg"
+  >
+    <div class="d-flex flex-column fill-height justify-center align-center">
+      <v-card class="auth-card" max-width="450px" width="100%">
+        <v-toolbar
+          color="rgba(0, 0, 0, 0.3)"
+          dark
+          flat
+        >
+          <v-toolbar-title class="text-center text-h5 font-weight-light">
+            毛孩救援站
+          </v-toolbar-title>
+        </v-toolbar>
+        <v-tabs v-model="tab" background-color="transparent" color="primary" grow>
+          <v-tab value="login">登入</v-tab>
+          <v-tab value="register">註冊</v-tab>
+        </v-tabs>
+        <v-window v-model="tab">
+          <!-- 登入表單 -->
+          <v-window-item value="login">
+            <v-card-text class="px-6 py-8">
+              <v-form :disabled="loginForm.isSubmitting.value" @submit.prevent="login">
+                <v-text-field
+                  v-model="loginAccount.value.value"
+                  :error-messages="loginAccount.errorMessage.value"
+                  label="帳號或信箱"
+                  required
+                  variant="underlined"
+                />
+                <v-text-field
+                  v-model="loginPassword.value.value"
+                  counter
+                  :error-messages="loginPassword.errorMessage.value"
+                  label="密碼"
+                  maxlength="20"
+                  minlength="4"
+                  required
+                  type="password"
+                  variant="underlined"
+                />
+                <v-btn
+                  block
+                  class="mt-6"
+                  color="primary"
+                  :loading="loginForm.isSubmitting.value"
+                  size="large"
+                  type="submit"
+                >登入</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-window-item>
 
-            <!-- 註冊表單 -->
-            <v-window-item value="register">
-              <v-card-text>
-                <v-form :disabled="registerForm.isSubmitting.value" @submit.prevent="register">
-                  <v-text-field
-                    v-model="registerAccount.value.value"
-                    counter
-                    :error-messages="registerAccount.errorMessage.value"
-                    label="帳號"
-                    maxlength="20"
-                    minlength="4"
-                    required
-                  />
-                  <v-text-field
-                    v-model="email.value.value"
-                    :error-messages="email.errorMessage.value"
-                    label="信箱"
-                    required
-                  />
-                  <v-text-field
-                    v-model="registerPassword.value.value"
-                    counter
-                    :error-messages="registerPassword.errorMessage.value"
-                    label="密碼"
-                    maxlength="20"
-                    minlength="4"
-                    required
-                    type="password"
-                  />
-                  <v-text-field
-                    v-model="confirmPassword.value.value"
-                    counter
-                    :error-messages="confirmPassword.errorMessage.value"
-                    label="確認密碼"
-                    maxlength="20"
-                    minlength="4"
-                    required
-                    type="password"
-                  />
-                  <v-btn block color="primary" :loading="registerForm.isSubmitting.value" type="submit">註冊</v-btn>
-                </v-form>
-              </v-card-text>
-            </v-window-item>
-          </v-window>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          <!-- 註冊表單 -->
+          <v-window-item value="register">
+            <v-card-text class="px-6 py-8">
+              <v-form :disabled="registerForm.isSubmitting.value" @submit.prevent="register">
+                <v-text-field
+                  v-model="registerAccount.value.value"
+                  counter
+                  :error-messages="registerAccount.errorMessage.value"
+                  label="帳號"
+                  maxlength="20"
+                  minlength="4"
+                  required
+                  variant="underlined"
+                />
+                <v-text-field
+                  v-model="email.value.value"
+                  :error-messages="email.errorMessage.value"
+                  label="信箱"
+                  required
+                  variant="underlined"
+                />
+                <v-text-field
+                  v-model="registerPassword.value.value"
+                  counter
+                  :error-messages="registerPassword.errorMessage.value"
+                  label="密碼"
+                  maxlength="20"
+                  minlength="4"
+                  required
+                  type="password"
+                  variant="underlined"
+                />
+                <v-text-field
+                  v-model="confirmPassword.value.value"
+                  counter
+                  :error-messages="confirmPassword.errorMessage.value"
+                  label="確認密碼"
+                  maxlength="20"
+                  minlength="4"
+                  required
+                  type="password"
+                  variant="underlined"
+                />
+                <v-btn
+                  block
+                  class="mt-6"
+                  color="primary"
+                  :loading="registerForm.isSubmitting.value"
+                  size="large"
+                  type="submit"
+                >註冊</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-window-item>
+        </v-window>
+      </v-card>
+    </div>
+  </v-parallax>
 </template>
 
 <script setup>
   import validator from 'validator'
   import { useField, useForm } from 'vee-validate'
-  import { onMounted, ref, watch } from 'vue'
+  import { ref, watch } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
   import * as yup from 'yup'
+  import authBg from '@/assets/auth-bg.jpg'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
 
@@ -156,6 +187,13 @@
         { immediate: true },
   )
 </script>
+
+<style scoped>
+.auth-card {
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+</style>
 
 <route lang="yaml">
 meta:

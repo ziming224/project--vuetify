@@ -189,6 +189,10 @@
       category.value.value = item.category
       address.value.value = item.address
       phone.value.value = item.phone
+      mail.value.value = item.mail
+      fb.value.value = item.fb
+      website.value.value = item.website
+      openingHours.value.value = item.openingHours
       description.value.value = item.description
       sell.value.value = item.sell
     }

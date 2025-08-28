@@ -1,24 +1,116 @@
 <template>
+  <HeroSection
+    :image-src="heroImage"
+    subtitle="如遇見傷勢嚴重或需要緊急協助的毛孩，能參考以下單位聯絡"
+    title="民間貓狗救援團體"
+  />
   <v-container>
-    <!-- Row 1 -->
-    <CardCarousel class="mb-6 parallax-carousel" :items="items1" title="北部" @card-click="openDialog" />
+    <!-- Row 1: 北部 -->
+    <div class="text-center my-8 my-md-12">
+      <h2 class="text-h4 font-weight-bold text-secondary">北部</h2>
+      <v-responsive class="mx-auto mt-2" max-width="120">
+        <v-divider />
+      </v-responsive>
+    </div>
+    <CardCarousel class="mb-6 parallax-carousel" :items="items1" @card-click="openDialog" />
 
-    <!-- Row 2 -->
-    <CardCarousel class="mb-6 parallax-carousel" :items="items2" title="中部" @card-click="openDialog" />
+    <!-- Row 2: 中部 -->
+    <div class="text-center my-8 my-md-12">
+      <h2 class="text-h4 font-weight-bold text-secondary">中部</h2>
+      <v-responsive class="mx-auto mt-2" max-width="120">
+        <v-divider />
+      </v-responsive>
+    </div>
+    <CardCarousel class="mb-6 parallax-carousel" :items="items2" @card-click="openDialog" />
 
-    <!-- Row 3 -->
-    <CardCarousel class="parallax-carousel" :items="items3" title="南部" @card-click="openDialog" />
+    <!-- Row 3: 南部 -->
+    <div class="text-center my-8 my-md-12">
+      <h2 class="text-h4 font-weight-bold text-secondary">南部</h2>
+      <v-responsive class="mx-auto mt-2" max-width="120">
+        <v-divider />
+      </v-responsive>
+    </div>
+    <CardCarousel class="parallax-carousel" :items="items3" @card-click="openDialog" />
     <!-- 點開畫面 -->
-    <v-dialog v-model="dialog" max-width="650px">
-      <v-card v-if="selected">
-        <v-img cover height="300px" :src="selected.image" />
-        <v-card-title>{{ selected.title }}</v-card-title>
-        <v-card-text>{{ selected.phone }}</v-card-text>
-        <v-card-text>{{ selected.address }}</v-card-text>
-        <v-card-text>{{ selected.detail }}</v-card-text>
+    <v-dialog v-model="dialog" max-width="600px" scrollable>
+      <v-card v-if="selected" class="org-dialog-card">
+        <v-img
+          class="align-end"
+          cover
+          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+          height="250px"
+          :src="selected.image"
+        >
+          <v-card-title class="text-white text-h5" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">
+            {{ selected.title }}
+          </v-card-title>
+        </v-img>
+
+        <v-card-subtitle class="pt-4">
+          <v-icon class="mr-1" icon="mdi-map-marker" size="small" />
+          {{ selected.address }}
+        </v-card-subtitle>
+
+        <v-card-text class="pt-2 pb-0">
+          <p class="text-body-1" style="white-space: pre-line;">
+            {{ selected.detail }}
+          </p>
+        </v-card-text>
+
+        <v-list class="py-0" density="compact">
+          <v-divider class="mx-4 my-2" />
+          <v-list-subheader>聯絡資訊</v-list-subheader>
+          <!-- 點擊撥號 -->
+          <v-list-item
+            v-if="selected.phone"
+            class="link-item"
+            :href="`tel:${selected.phone}`"
+            prepend-icon="mdi-phone"
+            rel="noopener noreferrer"
+            target="_blank"
+            :title="selected.phone"
+          />          <v-list-item
+            v-if="selected.fb"
+            class="link-item"
+            :href="selected.fb"
+            prepend-icon="mdi-facebook"
+            rel="noopener noreferrer"
+            target="_blank"
+            title="Facebook 粉專"
+          />
+          <v-list-item
+            v-if="selected.website"
+            class="link-item"
+            :href="selected.website"
+            prepend-icon="mdi-web"
+            rel="noopener noreferrer"
+            target="_blank"
+            title="官方網站"
+          />
+          <!-- 點擊寄信 -->
+          <v-list-item
+            v-if="selected.mail"
+            class="link-item"
+            :href="`mailto:${selected.mail}`"
+            prepend-icon="mdi-email"
+            rel="noopener noreferrer"
+            target="_blank"
+            :title="selected.mail"
+          />
+          <v-divider v-if="selected.openingHours" class="mx-4 my-2" />
+          <v-list-subheader v-if="selected.openingHours">
+            營運時間
+          </v-list-subheader>
+          <v-list-item v-if="selected.openingHours" prepend-icon="mdi-clock-outline">
+            <v-list-item-title style="white-space: pre-line; line-height: 1.6;">
+              {{ selected.openingHours || '尚未提供' }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" @click="dialog = false">關閉</v-btn>
+          <v-btn color="primary" variant="text" @click="dialog = false">關閉</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -28,7 +120,9 @@
 <script setup>
   import { nextTick, onMounted, ref } from 'vue'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import heroImage from '@/assets/hero-org2.jpg'
   import CardCarousel from '@/components/CardCarousel.vue'
+  import HeroSection from '@/components/HeroSection.vue'
   import orgService from '@/services/org'
 
   const createSnackbar = useSnackbar()
@@ -49,21 +143,27 @@
   // 獲取並處理組織資料的函式
   const fetchOrgs = async () => {
     try {
+      // 步驟 1: 透過 orgService 向後端 API 發送請求，獲取原始資料
       const { data } = await orgService.get()
-      // 後端回傳的資料結構是 { success: true, orgs: [...] }
-      // 並且 orgs 陣列中的物件包含 name, description, image 等欄位
+      console.log(data.orgs)
+      // 步驟 2: 使用 .map() 將後端回傳的資料 (data.orgs) 轉換為前端元件所需的格式
       const allOrgs = data.orgs.map(org => ({
-        title: org.name, // 將後端的 name 欄位對應到前端的 title
+        // 將後端欄位 (如 org.name) 映射到前端屬性 (如 title)
+        title: org.name,
         short: org.description, // 將後端的 description 對應到 short
         detail: org.description, // 將後端的 description 對應到 detail
         image: org.image,
         category: org.category,
         address: org.address,
         phone: org.phone,
+        mail: org.mail,
+        fb: org.fb,
+        website: org.website,
+        openingHours: org.openingHours,
+
       }))
 
-      // 根據 category 欄位將組織分類
-      // 請根據您後端的實際分類名稱修改以下字串
+      // 步驟 3: 根據分類將處理好的資料分配到不同的輪播圖中
       items1.value = allOrgs.filter(org => org.category === '北部')
       items2.value = allOrgs.filter(org => org.category === '中部')
       items3.value = allOrgs.filter(org => org.category === '南部')
@@ -85,17 +185,22 @@
     // 選取所有指定了視差效果的輪播圖
     const carousels = document.querySelectorAll('.parallax-carousel')
 
-    carousels.forEach(carousel => {
+    for (const carousel of carousels) {
       // 假設 CardCarousel 元件內部使用 <swiper-container>
       const swiperEl = carousel.querySelector('swiper-container')
-      if (swiperEl?.swiper) {
-        const swiper = swiperEl.swiper
+      if (!swiperEl) {
+        console.warn('在 .parallax-carousel 中找不到 swiper-container 元素。')
+        continue
+      }
+
+      const setupEvents = swiper => {
         swiper.on('progress', () => {
           for (const slide of swiper.slides) {
             const slideProgress = slide.progress
             const imgElement = slide.querySelector('.v-img__img')
             if (imgElement) {
-              const parallax = slideProgress * -40 // 視差強度，可調整
+              // 視差強度，可調整 -40 這個數值
+              const parallax = slideProgress * -40
               imgElement.style.transform = `translateX(${parallax}px)`
             }
           }
@@ -109,14 +214,36 @@
             }
           }
         })
-      } else {
-        console.warn('找不到 Swiper 實例來應用視差效果。')
       }
-    })
+
+      // 處理 Swiper 實例可能尚未初始化的情況。
+      // 如果已經初始化，直接設定事件。
+      if (swiperEl.swiper) {
+        setupEvents(swiperEl.swiper)
+      } else {
+        // 否則，監聽 'swiperinit' 事件，確保在初始化後才設定。
+        swiperEl.addEventListener('swiperinit', e => {
+          const [swiper] = e.detail
+          setupEvents(swiper)
+        }, { once: true })
+      }
+    }
   }
 
   // 在元件掛載時呼叫 fetchOrgs
   onMounted(fetchOrgs)
 </script>
 
-<style scoped></style>
+<style scoped>
+  .link-item :deep(.v-list-item-title) {
+    color: rgb(var(--v-theme-secondary));
+    font-weight: 500;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  .link-item:hover :deep(.v-list-item-title) {
+    opacity: 0.8;
+    text-decoration: underline;
+  }
+
+</style>
