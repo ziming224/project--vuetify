@@ -28,6 +28,7 @@
             hide-details
           />
           <v-btn
+            v-if="user.isLoggedIn"
             size="large"
             color="buttonBackground"
             :disabled="!product.sell"
@@ -35,6 +36,15 @@
             @click="addToCart"
           >
             加入購物車
+          </v-btn>
+          <v-btn
+            v-else
+            size="large"
+            color="buttonBackground"
+            prepend-icon="mdi-login"
+            to="/auth"
+          >
+            請先登入
           </v-btn>
         </div>
       </v-col>
@@ -113,14 +123,14 @@
         },
       })
     } catch (error) {
+      const errorMessage = error?.response?.data?.message || '無法加入購物車，請稍後再試'
       console.error('Error adding to cart:', error)
       createSnackbar({
-        text: '無法加入購物車',
+        text: errorMessage,
         snackbarProps: {
           color: 'red',
         },
       })
-      router.push('/')
     }
   }
 </script>

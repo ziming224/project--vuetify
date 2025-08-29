@@ -89,6 +89,7 @@
     { title: '登入/註冊', to: '/auth', show: !user.isLoggedIn },
     { title: '購物車', to: '/cart', show: user.isLoggedIn },
     { title: '管理', to: '/admin', show: user.isLoggedIn && user.isAdmin },
+    { title: '會員中心', to: '/member', show: user.isLoggedIn },
   ])
 
   const logout = async () => {

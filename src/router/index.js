@@ -17,6 +17,11 @@ import { useUserStore } from '@/stores/user'
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
+  scrollBehavior(to, from, savedPosition) {
+    // 總是在頁面切換時捲動到最頂部
+    // behavior: 'smooth'，捲動平滑動畫效果
+    return { top: 0, behavior: 'smooth' }
+  },
 })
 
 // 在每次路由跳轉前執行一些檢查或邏輯

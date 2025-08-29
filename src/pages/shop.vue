@@ -150,7 +150,7 @@
 <script setup>
   import gsap from 'gsap'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import { computed, onMounted, ref, watch } from 'vue'
+  import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
   import heroImage from '@/assets/dog-face.jpg'
@@ -270,9 +270,12 @@ const donationUnit = ref({
 
   gsap.registerPlugin(ScrollTrigger)
   onMounted(() => {
+    // 强制滚动到页面顶部，解决 GSAP pin 与 Vue Router scrollBehavior 的冲突
+    window.scrollTo(0, 0)
+
     const el = heroSection.value
 
-    gsap.fromTo(
+    const animation = gsap.fromTo(
       el,
       { scale: 1, y: 0 },
       {
@@ -289,6 +292,11 @@ const donationUnit = ref({
         },
       },
     )
+
+    onUnmounted(() => {
+      // 这是一个好习惯，在组件卸载时销毁 ScrollTrigger 实例以防止内存泄漏
+      animation.scrollTrigger?.kill()
+    })
   })
 </script>
 
