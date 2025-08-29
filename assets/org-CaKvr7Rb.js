@@ -1,1 +1,0 @@
-import{ar as t}from"./index-BRcPi2Li.js";const g={create(r){return t.apiAuth.post("/org",r)},getAll(){return t.apiAuth.get("/org/all")},get(){return t.api.get("/org")},getId(r){return t.api.get("/org/"+r)},update(r,e){return t.apiAuth.patch(`/org/${r}`,e)}};export{g as o};
