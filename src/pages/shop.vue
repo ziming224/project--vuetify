@@ -38,7 +38,7 @@
   </v-container>
 
   <v-container>
-    <!-- Filters and Sorting -->
+    <!-- 篩選和排序 -->
     <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
         <v-chip-group v-model="selectedCategory" mandatory selected-class="text-primary" @update:model-value="page = 1">

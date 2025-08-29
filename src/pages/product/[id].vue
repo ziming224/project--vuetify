@@ -1,51 +1,55 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
-        <h1 class="text-center">{{ product.name }}</h1>
-      </v-col>
-      <v-divider />
       <v-col cols="12" md="6">
         <v-img
-          class="mb-4"
+          class="rounded-lg"
           contain
-          height="400"
+          height="500"
+          border-radius="16"
           :src="product.image"
         />
       </v-col>
       <v-col cols="12" md="6">
-        <p>分類: {{ product.category }}</p>
-        <p>價格: {{ product.price }}</p>
-        <v-divider class="my-5" />
-        <p style="white-space: pre;">{{ product.description }}</p>
-        <v-number-input
-          v-model="quantity"
-          control-variant="split"
-          :min="1"
-          variant="outlined"
-        />
-        <v-btn
-          class="mt-4"
-          color="primary"
-          :disabled="!product.sell"
-          @click="addToCart"
-        >
-          加入購物車
-        </v-btn>
+        <h1 class="text-h4 font-weight-bold mb-2">{{ product.name }}</h1>
+        <p class="text-body-1 my-6" style="white-space: pre-wrap;">{{ product.description }}</p>
+
+        <div class="text-h5 font-weight-bold mb-6">
+          NT$ {{ product.price.toLocaleString() }}
+        </div>
+<p>數量</p>
+        <div class="d-flex align-center ga-4">
+          <v-number-input
+            v-model="quantity"
+            control-variant="split"
+            :min="1"
+            variant="outlined"
+            style="max-width: 200px;"
+            hide-details
+          />
+          <v-btn
+            size="large"
+            color="buttonBackground"
+            :disabled="!product.sell"
+            prepend-icon="mdi-cart-plus"
+            @click="addToCart"
+          >
+            加入購物車
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
   </v-container>
   <v-overlay
     class="align-center justify-center text-center"
     :model-value="!product.sell"
-    opacity="0.7"
     persistent
     scrim="black"
   >
-    <h1>已下架</h1>
-    <p>這個商品已經下架，無法購買。</p>
+    <h1 class="text-h2 font-weight-bold mb-4">已下架</h1>
+    <p class="text-h6 mb-8">這個商品已經下架，無法購買。</p>
     <v-btn
-      color="primary"
+      color="accent"
       to="/"
     >
       返回首頁
@@ -78,16 +82,11 @@
   const getProduct = async () => {
     try {
       const { data } = await productService.getId(route.params.id)
-      product.value.name = data.product.name
-      product.value.price = data.product.price
-      product.value.description = data.product.description
-      product.value.category = data.product.category
-      product.value.sell = data.product.sell
-      product.value.image = data.product.image
+      Object.assign(product.value, data.product)
 
       document.title = `${data.product.name} | 購物網站`
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.error('Error fetching product:', error)
       createSnackbar({
         text: '無法載入商品資料',
         snackbarProps: {
@@ -114,7 +113,7 @@
         },
       })
     } catch (error) {
-      console.error('Error fetching products:', error)
+      console.error('Error adding to cart:', error)
       createSnackbar({
         text: '無法加入購物車',
         snackbarProps: {

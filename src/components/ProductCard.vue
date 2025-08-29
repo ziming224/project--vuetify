@@ -9,7 +9,7 @@
     <v-img
       class="text-white align-end"
       cover
-      height="550"
+      height="450"
       :src="image"
     >
       <v-toolbar
@@ -23,11 +23,8 @@
     </v-img>
 
     <v-card-text class="pt-4 flex-grow-1">
-      <div class="text-subtitle-1 font-weight-medium text-medium-emphasis">
-        {{ category }}
-      </div>
 
-      <div class="text-h6 font-weight-bold text-primary my-2">
+      <div class="text-h6 font-weight-bold text-secondary my-2">
         NT$ {{ price.toLocaleString() }}
       </div>
 
@@ -41,12 +38,13 @@
     <v-card-actions class="pa-3">
       <v-spacer />
       <v-btn
-        color="primary"
+        color="secondary"
         prepend-icon="mdi-cart-plus"
         text="加入購物車"
         variant="tonal"
         @click.prevent="addToCart"
-      />
+      /> 
+
     </v-card-actions>
   </v-card>
 </template>
@@ -66,13 +64,8 @@
   const addToCart = () => {
     emit('add-to-cart')
   }
-
   const goToProduct = () => {
-    if (user.isLogin) {
-      router.push(`/product/${props._id}`)
-    } else {
-      router.push('/auth')
-    }
+    router.push('/product/' + props._id)
   }
 </script>
 
