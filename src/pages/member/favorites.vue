@@ -1,3 +1,4 @@
+<template></template>
 <!-- <template>
   <div>
     <h2 class="text-h5 font-weight-bold mb-6">我的收藏</h2>
