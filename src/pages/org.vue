@@ -154,23 +154,29 @@
     try {
       // 步驟 1: 透過 orgService 向後端 API 發送請求，獲取原始資料
       const { data } = await orgService.get()
-      console.log(data.orgs)
       // 步驟 2: 使用 .map() 將後端回傳的資料 (data.orgs) 轉換為前端元件所需的格式
-      const allOrgs = data.orgs.map(org => ({
-        // 將後端欄位 (如 org.name) 映射到前端屬性 (如 title)
-        title: org.name,
-        short: org.description, // 將後端的 description 對應到 short
-        detail: org.description, // 將後端的 description 對應到 detail
-        image: org.image,
-        category: org.category,
-        address: org.address,
-        phone: org.phone,
-        mail: org.mail,
-        fb: org.fb,
-        website: org.website,
-        openingHours: org.openingHours,
+      const allOrgs = data.orgs.map(org => {
+        // 為了讓卡片高度一致，我們需要截斷描述文字。
+        // 這裡我們取前 40 個字元，如果原始描述更長，則在後面加上 "..."
+        const shortDescription = org.description.length > 40
+          ? org.description.substring(0, 40) + '...'
+          : org.description
 
-      }))
+        return {
+          // 將後端欄位 (如 org.name) 映射到前端屬性 (如 title)
+          title: org.name,
+          short: shortDescription, // 卡片上顯示的簡短描述
+          detail: org.description, // 彈出視窗中顯示的完整描述
+          image: org.image,
+          category: org.category,
+          address: org.address,
+          phone: org.phone,
+          mail: org.mail,
+          fb: org.fb,
+          website: org.website,
+          openingHours: org.openingHours
+        }
+      })
 
       // 步驟 3: 根據分類將處理好的資料分配到不同的輪播圖中
       items1.value = allOrgs.filter(org => org.category === '北部')

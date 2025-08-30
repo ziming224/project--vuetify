@@ -33,12 +33,11 @@
           </div>
           <v-card-title class="pt-4">{{ item.title }}</v-card-title>
           <v-card-subtitle>{{ item.short }}</v-card-subtitle>
-          <v-card-text class="flex-grow-1" style="font-size: 1.1rem;">
-            地址：{{ item.address }}
+          <v-card-text class="card-info-text">
+            <div class="truncate-text">地址：{{ item.address }}</div>
+            <div class="truncate-text">聯繫方式：{{ item.phone }}</div>
           </v-card-text>
-          <v-card-text class="flex-grow-1" style="font-size: 1.1rem;">
-            聯繫方式：{{ item.phone }}
-          </v-card-text>
+          <v-spacer />
           <v-card-actions>
             <v-spacer />
             <v-btn>查看更多</v-btn>
@@ -113,5 +112,16 @@
   width: 130%;
   max-width: none; /* 覆蓋 Vuetify 可能的 max-width 限制 */
   will-change: transform;
+}
+
+.card-info-text {
+  font-size: 1.1rem;
+  padding-bottom: 0.5rem; /* 稍微留一點底部空間 */
+}
+/* CSS 截斷樣式 */
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

@@ -19,6 +19,7 @@
       <v-col cols="12" md="9">
         <v-card rounded="lg" border>
           <v-card-text>
+            <!-- 子頁面將會顯示在這裡 -->
             <router-view />
           </v-card-text>
         </v-card>
@@ -28,23 +29,10 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-
 const navItems = [
   { title: '個人資料', to: '/member/profile', icon: 'mdi-account-circle-outline' },
   { title: '我的訂單', to: '/member/orders', icon: 'mdi-receipt-text-outline' },
-  { title: '我的收藏', to: '/member/wishlist', icon: 'mdi-heart-outline' },
-  // 未來可以新增更多項目，例如：
+  { title: '我的收藏', to: '/member/favorites', icon: 'mdi-heart-outline' },
   // { title: '修改密碼', to: '/member/password', icon: 'mdi-lock-outline' },
 ]
-
-const route = useRoute()
-const router = useRouter()
-
-onMounted(() => {
-  if (route.path === '/member') {
-    router.replace('/member/profile')
-  }
-})
 </script>
