@@ -3,49 +3,49 @@
     <h2 class="text-h5 font-weight-bold mb-6">我的訂單</h2>
 
     <div v-if="orders.length === 0" class="text-center pa-8">
-      <v-icon size="64" color="grey-lighten-1">mdi-receipt-text-outline</v-icon>
+      <v-icon color="grey-lighten-1" size="64">mdi-receipt-text-outline</v-icon>
       <h3 class="text-h6 my-4">您目前沒有任何訂單</h3>
       <p class="text-medium-emphasis mb-6">快去商城逛逛吧！</p>
-      <v-btn color="primary" to="/shop">前往商城</v-btn>
+      <v-btn color="tea" to="/shop">前往商城</v-btn>
     </div>
 
     <v-expansion-panels v-else variant="accordion">
       <v-expansion-panel
         v-for="order in orders"
         :key="order._id"
-        elevation="0"
         class="border mb-4"
+        elevation="0"
       >
         <v-expansion-panel-title class="py-3">
           <v-row align="center" class="spacer">
-            <v-col cols="12" sm="5" md="4">
+            <v-col cols="12" md="4" sm="5">
               <div class="text-caption text-medium-emphasis">訂單編號</div>
               <div class="font-weight-bold text-mono">{{ order._id }}</div>
             </v-col>
-            <v-col cols="6" sm="4" md="4">
+            <v-col cols="6" md="4" sm="4">
               <div class="text-caption text-medium-emphasis">下單日期</div>
               <div class="font-weight-medium">{{ new Date(order.createdAt).toLocaleDateString() }}</div>
             </v-col>
-            <v-col cols="6" sm="3" md="4">
+            <v-col cols="6" md="4" sm="3">
               <div class="text-caption text-medium-emphasis">總金額</div>
-              <div class="font-weight-bold text-primary text-h6">
+              <div class="font-weight-bold text-secondary text-h6">
                 NT$ {{ order.totalPrice.toLocaleString() }}
               </div>
             </v-col>
           </v-row>
         </v-expansion-panel-title>
         <v-expansion-panel-text class="bg-grey-lighten-5">
-          <v-list lines="two" class="bg-transparent">
+          <v-list class="bg-transparent" lines="two">
             <v-list-item
               v-for="item in order.cart"
               :key="item._id"
+              class="mb-2"
               :title="item.product.name"
               :to="`/product/${item.product._id}`"
-              class="mb-2"
             >
               <template #prepend>
-                <v-avatar rounded="lg" size="64" class="mr-4">
-                  <v-img :src="item.product.image" :alt="item.product.name"></v-img>
+                <v-avatar class="mr-4" rounded="lg" size="64">
+                  <v-img :alt="item.product.name" :src="item.product.image" />
                 </v-avatar>
               </template>
               <v-list-item-subtitle>

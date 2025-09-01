@@ -4,8 +4,8 @@
     :src="authBg"
   >
     <div class="d-flex flex-column fill-height justify-center align-center">
-      <v-card class="auth-card" max-width="450px" width="100%">
-        <v-toolbar
+      <v-card class="auth-card" max-width="550px" width="100%">
+        <!-- <v-toolbar
           color="rgba(0, 0, 0, 0.3)"
           dark
           flat
@@ -13,8 +13,8 @@
           <v-toolbar-title class="text-center text-h5 font-weight-light">
             毛孩救援站
           </v-toolbar-title>
-        </v-toolbar>
-        <v-tabs v-model="tab" background-color="transparent" color="primary" grow>
+        </v-toolbar> -->
+        <v-tabs v-model="tab" background-color="transparent" color="secondary" grow>
           <v-tab value="login">登入</v-tab>
           <v-tab value="register">註冊</v-tab>
         </v-tabs>
@@ -44,7 +44,7 @@
                 <v-btn
                   block
                   class="mt-6"
-                  color="primary"
+                  color="tea"
                   :loading="loginForm.isSubmitting.value"
                   size="large"
                   type="submit"
@@ -99,7 +99,7 @@
                 <v-btn
                   block
                   class="mt-6"
-                  color="primary"
+                  color="tea"
                   :loading="registerForm.isSubmitting.value"
                   size="large"
                   type="submit"

@@ -4,8 +4,8 @@
     <!-- 毛玻璃層 -->
     <!-- 文字內容 -->
     <div class="text-center content">
-      <h1 class="text-h2 font-weight-bold mb-5">民間貓狗救援團體</h1>
-      <p class="text-h5 font-weight-regular">
+      <h1 ref="heroTitle" class="text-h2 font-weight-bold mb-5">民間貓狗救援團體</h1>
+      <p ref="heroSubtitle" class="text-h5 font-weight-regular">
         遇見受傷嚴重貓狗可以參考以下救援團體 <br>
         若無明顯外傷需要安置能撥打1959台灣全國統一的動物保護專線，或1999市民服務熱線
       </p>
@@ -13,31 +13,23 @@
     </div>
   </v-container>
 
-  <v-container>
+  <v-container style="margin-bottom: 150px;">
     <!-- Row 1: 北部 -->
-    <div class="text-center my-8 my-md-12">
-      <h2 class="text-h4 font-weight-bold text-secondary">北部</h2>
-      <v-responsive class="mx-auto mt-2" max-width="120">
-        <v-divider />
-      </v-responsive>
+    <div class="text-center my-8 my-md-12 section-title-wrapper">
+
+      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#A7D7C5" icon="mdi-paw" />北部</h2>
     </div>
     <CardCarousel class="mb-6 parallax-carousel" :items="items1" @card-click="openDialog" />
 
     <!-- Row 2: 中部 -->
-    <div class="text-center my-8 my-md-12">
-      <h2 class="text-h4 font-weight-bold text-secondary">中部</h2>
-      <v-responsive class="mx-auto mt-2" max-width="120">
-        <v-divider />
-      </v-responsive>
+    <div class="text-center my-8 my-md-12 section-title-wrapper">
+      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#FF8A65" icon="mdi-paw" />中部</h2>
     </div>
     <CardCarousel class="mb-6 parallax-carousel" :items="items2" @card-click="openDialog" />
 
     <!-- Row 3: 南部 -->
-    <div class="text-center my-8 my-md-12">
-      <h2 class="text-h4 font-weight-bold text-secondary">南部</h2>
-      <v-responsive class="mx-auto mt-2" max-width="120">
-        <v-divider />
-      </v-responsive>
+    <div class="text-center my-8 my-md-12 section-title-wrapper">
+      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#C5E1A5" icon="mdi-paw" />南部</h2>
     </div>
     <CardCarousel class="parallax-carousel" :items="items3" @card-click="openDialog" />
     <!-- 點開畫面 -->
@@ -78,7 +70,8 @@
             rel="noopener noreferrer"
             target="_blank"
             :title="selected.phone"
-          />          <v-list-item
+          />
+          <v-list-item
             v-if="selected.fb"
             class="link-item"
             :href="selected.fb"
@@ -112,14 +105,15 @@
           </v-list-subheader>
           <v-list-item v-if="selected.openingHours" prepend-icon="mdi-clock-outline">
             <v-list-item-title style="white-space: pre-line; line-height: 1.6;">
-              {{ selected.openingHours || '尚未提供' }}
+              <!-- 如有欄位空白會是string - undefined，這樣單用||沒用-->
+              {{ (!selected.openingHours || selected.openingHours === 'undefined') ? '尚未提供' : selected.openingHours }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" variant="text" @click="dialog = false">關閉</v-btn>
+          <v-btn color="secondary" variant="text" @click="dialog = false">關閉</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -127,14 +121,19 @@
 </template>
 
 <script setup>
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import { nextTick, onMounted, ref } from 'vue'
   import { useSnackbar } from 'vuetify-use-dialog'
-  import heroImage from '@/assets/hero-org2.jpg'
   import CardCarousel from '@/components/CardCarousel.vue'
-  import HeroSection from '@/components/HeroSection.vue'
   import orgService from '@/services/org'
 
+  gsap.registerPlugin(ScrollTrigger)
   const createSnackbar = useSnackbar()
+
+  // GSAP 動畫用的 refs
+  const heroTitle = ref(null)
+  const heroSubtitle = ref(null)
 
   const dialog = ref(false)
   const selected = ref(null)
@@ -159,7 +158,7 @@
         // 為了讓卡片高度一致，我們需要截斷描述文字。
         // 這裡我們取前 40 個字元，如果原始描述更長，則在後面加上 "..."
         const shortDescription = org.description.length > 40
-          ? org.description.substring(0, 40) + '...'
+          ? org.description.slice(0, 40) + '...'
           : org.description
 
         return {
@@ -174,7 +173,7 @@
           mail: org.mail,
           fb: org.fb,
           website: org.website,
-          openingHours: org.openingHours
+          openingHours: org.openingHours,
         }
       })
 
@@ -245,8 +244,60 @@
     }
   }
 
-  // 在元件掛載時呼叫 fetchOrgs
-  onMounted(fetchOrgs)
+  // 設定頁面進入與滾動動畫
+  const setupAnimations = () => {
+    // Hero 區塊文字動畫
+    gsap.from(heroTitle.value, {
+      autoAlpha: 0,
+      y: -50,
+      duration: 1,
+      ease: 'power3.out',
+      delay: 0.2,
+    })
+    gsap.from(heroSubtitle.value, {
+      autoAlpha: 0,
+      y: -50,
+      duration: 1,
+      ease: 'power3.out',
+      delay: 0.5,
+    })
+
+    // 各區域標題動畫
+    for (const el of gsap.utils.toArray('.section-title-wrapper')) {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+        autoAlpha: 0,
+        y: 50,
+        duration: 0.8,
+        ease: 'power3.out',
+      })
+    }
+
+    // 各區域輪播圖動畫
+    for (const el of gsap.utils.toArray('.parallax-carousel')) {
+      gsap.from(el, {
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+        autoAlpha: 0,
+        y: 50,
+        duration: 0.8,
+        ease: 'power3.out',
+        delay: 0.2,
+      })
+    }
+  }
+
+  onMounted(() => {
+    fetchOrgs()
+    setupAnimations()
+  })
 </script>
 
 <style scoped>
@@ -283,19 +334,17 @@
   z-index: 1;
 }
 
-.content h1, .content p {
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 1s ease forwards;
-}
-
-@keyframes fadeUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 p {
   line-height: 1.7;
 }
 </style>
+
+<route lang="yaml">
+  meta:
+    # 標題
+    title: '救援單位'
+    # 有沒有登入都能看
+    login: ''
+    # 不是管理員也能看
+    admin: false
+</route>

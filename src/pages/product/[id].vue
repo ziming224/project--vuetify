@@ -1,51 +1,68 @@
 <template>
-  <v-container>
+  <v-container style="margin-top: 50px;margin-bottom: 50px;">
     <v-row>
       <v-col cols="12" md="6">
         <v-img
+          border-radius="16"
           class="rounded-lg"
           contain
           height="500"
-          border-radius="16"
           :src="product.image"
         />
       </v-col>
       <v-col cols="12" md="6">
         <h1 class="text-h4 font-weight-bold mb-2">{{ product.name }}</h1>
+        <div class="d-flex align-center mb-4">
+          <v-rating
+            color="amber"
+            density="compact"
+            half-increments
+            :model-value="4.5"
+            readonly
+            size="small"
+          />
+          <div class="text-grey ms-2">4.5 (413)</div>
+        </div>
         <p class="text-body-1 my-6" style="white-space: pre-wrap;">{{ product.description }}</p>
 
         <div class="text-h5 font-weight-bold mb-6">
           NT$ {{ product.price.toLocaleString() }}
         </div>
-<p>數量</p>
+        <p>數量</p>
         <div class="d-flex align-center ga-4">
           <v-number-input
             v-model="quantity"
             control-variant="split"
-            :min="1"
-            variant="outlined"
-            style="max-width: 200px;"
             hide-details
+            :min="1"
+            style="max-width: 200px;"
+            variant="outlined"
           />
           <v-btn
             v-if="user.isLoggedIn"
-            size="large"
             color="buttonBackground"
             :disabled="!product.sell"
             prepend-icon="mdi-cart-plus"
+            size="large"
             @click="addToCart"
           >
             加入購物車
           </v-btn>
           <v-btn
             v-else
-            size="large"
             color="buttonBackground"
             prepend-icon="mdi-login"
+            size="large"
             to="/auth"
           >
             請先登入
           </v-btn>
+        </div>
+        <div class="mt-6">
+          <p class="text-subtitle-1 font-weight-bold">分享給朋友</p>
+          <v-btn color="blue-darken-2" icon="mdi-facebook" variant="text" />
+          <v-btn color="blue-lighten-1" icon="mdi-twitter" variant="text" />
+          <v-btn color="purple-lighten-1" icon="mdi-instagram" variant="text" />
         </div>
       </v-col>
     </v-row>

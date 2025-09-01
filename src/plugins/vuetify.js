@@ -34,6 +34,7 @@ export default createVuetify({
           mainBackground: '#ffc46cff', // 主內容背景色
           footerBackground: '#D0E0D0',
           buttonBackground: '#F9A825',
+          tea: '#819A91',
           // sectionOrg: '#f2ffecff',
           // 救援單位卡片顏色 (使用 accent)
           // sectionShop: '#e6f5f0ff',

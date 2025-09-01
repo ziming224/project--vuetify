@@ -6,8 +6,8 @@
       :src="imageSrc"
     >
       <div class="hero-text">
-        <h1 class="text-h3 font-weight-bold">{{ title }}</h1>
-        <p class="text-subtitle-1">{{ subtitle }}</p>
+        <h1 class="text-h2 font-weight-bold">{{ title }}</h1>
+        <p class="text-h5 font-weight-bold">{{ subtitle }}</p>
       </div>
     </v-img>
   </div>
@@ -31,7 +31,7 @@
     },
     subtitle: {
       type: String,
-      default: '您的每一次消費，都在為毛孩們累積幸福',
+      default: '每月與不同單位合作您下的一筆訂單能讓毛孩們多一份溫飽',
     },
   })
 
@@ -78,6 +78,7 @@
 .hero-text {
   text-align: center;
   color: white;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+  text-shadow: 5px 3px 6px rgba(0, 0, 0, 0.6);
+  margin-top: -50px;
 }
 </style>

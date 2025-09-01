@@ -2,11 +2,11 @@
   <!-- Hero Banner -->
   <HeroSection
     :image-src="heroImage"
-    subtitle="您的每一次消費，都在為毛孩們累積幸福"
+    subtitle="每月與不同單位合作您下的一筆訂單能讓毛孩們多一份溫飽"
     title="公益商城"
   />
 
- <v-container class="announcement-container my-8" fluid>
+  <v-container class="announcement-container my-8" fluid>
     <v-row justify="center">
       <v-col cols="12" md="8">
         <v-card
@@ -15,21 +15,22 @@
         >
           <v-row align="center" no-gutters>
             <!-- 左邊icon -->
-            <v-col cols="2" class="text-center">
-              <v-icon size="40" color="primary">mdi-bullhorn</v-icon>
+            <v-col class="text-center" cols="2">
+              <v-icon color="secondary" size="48">mdi-bullhorn</v-icon>
             </v-col>
 
             <!-- 公告文字 -->
             <v-col cols="10">
               <h2 class="mb-2 text-h4">本月公益合作捐贈單位</h2>
-              <p>在本賣場消費之商品都會捐贈與該月合作單位</p>
-              <p>每月合作對象以公告單位為準</p>
-              <p class="mb-1 text-h6">
-                💝 本月商品將捐贈給 <strong>{{ donationUnit.name }}</strong>
+              <p class="text-body-1">
+                在本賣場消費之商品都會捐贈與該月合作單位，每月合作對象以公告單位為準。
               </p>
-              <small class="text-grey">
+              <p class="mb-1 text-h6">
+                💝 本月商品將捐贈給 <strong class="text-secondary">{{ donationUnit.name }}</strong>
+              </p>
+              <p class="text-medium-emphasis mb-0">
                 {{ donationUnit.description }}
-              </small>
+              </p>
             </v-col>
           </v-row>
         </v-card>
@@ -41,7 +42,7 @@
     <!-- 篩選和排序 -->
     <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
-        <v-chip-group v-model="selectedCategory" mandatory selected-class="text-primary" @update:model-value="page = 1">
+        <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondaryary" @update:model-value="page = 1">
           <v-chip filter :value="''" variant="outlined">
             全部
           </v-chip>
@@ -160,11 +161,10 @@
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
 
-
-const donationUnit = ref({
-  name: '浪浪狗狗之家',
-  description: '致力於救援與照顧流浪動物'
-})
+  const donationUnit = ref({
+    name: '浪浪狗狗之家',
+    description: '致力於救援與照顧流浪動物',
+  })
   const heroSection = ref(null)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
@@ -214,7 +214,7 @@ const donationUnit = ref({
   const search = ref('')
 
   const selectedCategory = ref('')
-  const categoryOptions = ['貓用', '狗用']
+  const categoryOptions = ['貓用', '犬用']
 
   // 選擇的排序選項索引
   const selectedSort = ref(0)
@@ -265,8 +265,6 @@ const donationUnit = ref({
       })
     }
   }
-
-
 
   gsap.registerPlugin(ScrollTrigger)
   onMounted(() => {

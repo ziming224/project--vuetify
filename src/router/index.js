@@ -17,7 +17,7 @@ import { useUserStore } from '@/stores/user'
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: setupLayouts(routes),
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior (to, from, savedPosition) {
     // 總是在頁面切換時捲動到最頂部
     // behavior: 'smooth'，捲動平滑動畫效果
     return { top: 0, behavior: 'smooth' }
@@ -56,7 +56,8 @@ router.beforeEach(async (to, from, next) => {
 })
 // 進到頁面改標題
 router.afterEach(to => {
-  document.title = `${to.meta.title} | 毛孩救援地`
+  const baseTitle = '毛孩救援站'
+  document.title = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804

@@ -12,14 +12,14 @@ import { registerPlugins } from '@/plugins'
 // Components
 import App from './App.vue'
 
-import vuetify from './plugins/vuetify'
+// import vuetify from './plugins/vuetify'
 
 import './assets/main.css'
 // Styles
 import 'unfonts.css'
+import 'vuetify/styles'
 
 const app = createApp(App)
 
 registerPlugins(app)
-app.use(vuetify)
 app.mount('#app')

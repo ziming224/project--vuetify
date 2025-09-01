@@ -5,16 +5,27 @@
       height="900"
       src="@/assets/dogcat.jpg"
     >
-      <div class="d-flex flex-column fill-height justify-center align-center text-white">
+      <div class="hero-overlay" />
+      <div class="d-flex flex-column fill-height justify-center align-center text-white" style="position: relative">
         <h1
           ref="titleRef"
-          class="text-h2 font-weight-thin mb-4"
+          class="text-h2 font-weight-bold mb-4 hero-text-shadow"
         >
           毛孩救援站
         </h1>
-        <h4 ref="subtitleRef" class="subheading text-h5">
+        <h4
+          ref="subtitleRef"
+          class="subheading text-h5 font-weight-bold hero-text-shadow"
+        >
           我們無法拯救全世界所有的毛孩，但我們可以改變一個毛孩的全世界。
         </h4>
+        <p
+          ref="descriptionRef"
+          class=" text-h6 mt-6 hero-text-shadow"
+          style=" opacity: 0.9;"
+        >
+          專為您整合各地區動物救援單位資訊，並提供緊急應對SOP，讓我們一起成為牠們的希望。
+        </p>
       </div>
     </v-parallax>
     <!-- 分頁連結 -->
@@ -67,7 +78,25 @@
                   <h3 class="text-h5 font-weight-bold">{{ item.title }}</h3>
                 </div>
               </div>
-              <p class="text-body-1 mt-4" style="white-space: pre-line;">{{ item.text }}</p>
+              <div class="mt-4">
+                <div
+                  v-for="(point, pointIndex) in item.text.split('\n\n')"
+                  :key="pointIndex"
+                  class="d-flex align-start mb-4"
+                >
+                  <v-icon class="mr-3 mt-1 flex-shrink-0" :color="item.color" icon="mdi-paw" size="small" />
+                  <p class="text-body-1" style="line-height: 1.75;">
+                    <!-- 冒號前字體為粗體 -->
+                    <template v-if="point.includes('：')">
+                      <strong>{{ point.split('：')[0] }}：</strong>
+                      <span>{{ point.split('：').slice(1).join('：') }}</span>
+                    </template>
+                    <template v-else>
+                      {{ point }}
+                    </template>
+                  </p>
+                </div>
+              </div>
             </div>
           </v-col>
         </v-row>
@@ -91,6 +120,7 @@
 
   const titleRef = ref(null)
   const subtitleRef = ref(null)
+  const descriptionRef = ref(null)
   const { mdAndUp } = useDisplay()
 
   onMounted(() => {
@@ -104,6 +134,10 @@
 
     gsap.from(subtitleRef.value, {
       duration: 1.5, y: 50, opacity: 0, ease: 'power3.out', delay: 0.5, // 延遲 0.5 秒開始
+    })
+
+    gsap.from(descriptionRef.value, {
+      duration: 1.5, y: 50, opacity: 0, ease: 'power3.out', delay: 1,
     })
 
     // 分頁連結卡片動畫
@@ -145,35 +179,35 @@
   const sections = ref([
     { title: '救援單位', subtitle: '查看所有救援單位', icon: 'mdi-home-heart', to: '/org', color: 'sectionOrg' },
     { title: '公益商城', subtitle: '購物同時做公益', icon: 'mdi-store', to: '/shop', color: 'sectionShop' },
-    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-account-group', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1' },
+    { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-heart-search', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1' },
   ])
 
   const sopItems = ref([
     {
       title: '第一步：確保自身和動物的安全',
       text: '評估環境： 觀察周圍，確認沒有交通危險（如來往車輛）。如果動物在馬路中間，請先確保沒有來車，再嘗試接近。\n\n保持安全距離： 受傷的動物可能因為疼痛、害怕而有攻擊性。不要直接伸手觸摸或安撫牠。\n\n準備防護： 如果您有手套、外套、毛巾等物品，可以先用這些物品保護自己，再輕輕靠近。',
-      icon: 'mdi-shield-check-outline',
-      color: 'primary',
+      icon: 'mdi-bus-alert',
+      color: 'tea',
       image: sopImage1,
     },
     {
       title: '第二步：評估狀況與尋求協助',
       text: '初步評估： 觀察動物的傷勢，如是否有明顯骨折、出血或呼吸困難，但切勿過度干擾。\n\n聯繫專業單位： 立即撥打當地動物保護處（如1999市民專線）或動物救援組織的電話。\n\n提供資訊： 清楚告知您的確切位置、動物的種類、大小與傷勢。',
-      icon: 'mdi-phone-outline',
+      icon: 'mdi-phone-classic',
       color: 'secondary',
       image: sopImage2,
     },
     {
       title: '第三步：提供基本協助（安全前提下）',
       text: '提供飲水： 如果動物意識清楚且不會攻擊，可以在牠面前放置一小碗清水，不要強行灌食。\n\n保暖與安撫： 若天氣寒冷，可用毛巾或外套輕輕蓋在動物身上保暖。\n\n避免移動： 除非動物處於立即的危險中，否則盡量不要移動牠，以免加重傷勢。',
-      icon: '',
-      color: 'primary',
+      icon: 'mdi-dog-side',
+      color: 'tea',
       image: sopImage3,
     },
     {
       title: '第四步：等待專業人員並協助引導',
       text: '保持距離等待： 在安全的地方等待專業救援人員到達，同時留意動物的動向。\n\n引導救援： 當救援人員到達時，向他們說明動物的位置和狀況，協助他們順利接近動物。\n\n您的耐心是關鍵： 您的守護是救援成功的第一步。',
-      icon: 'mdi-account-hard-hat',
+      icon: 'mdi-account-child',
       color: 'secondary',
       image: sopImage4,
     },
@@ -182,6 +216,18 @@
 </script>
 
 <style scoped>
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.hero-text-shadow {
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
 .section-card {
   transition: transform 0.2s ease-in-out;
   border-top-right-radius: 50px;
