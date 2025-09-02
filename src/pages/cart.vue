@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="custom-container" fluid style="margin-top: 50px;margin-bottom: 50px;">
     <h1 class="text-h4 font-weight-bold my-4">我的購物車</h1>
     <v-alert
       v-model="showAnnouncement"
@@ -187,6 +187,22 @@
     }
   }
 </script>
+
+<style scoped>
+.custom-container {
+  max-width: calc(100% - 600px); /* 總共左右各 200px */
+  margin: 0 auto;               /* 置中 */
+  padding-left: 0 !important;   /* 移除 container 預設 padding */
+  padding-right: 0 !important;
+}
+
+/* 大於 960px (md breakpoint) 才套用 */
+@media (max-width: 959px) {
+  .custom-container {
+    max-width: 100%;
+    margin: 0;
+  }
+}</style>
 
 <route lang="yaml">
   meta:

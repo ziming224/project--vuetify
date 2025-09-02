@@ -13,23 +13,23 @@
     </div>
   </v-container>
 
-  <v-container style="margin-bottom: 150px;">
+  <v-container class="custom-container" fluid style="margin-bottom: 150px;">
     <!-- Row 1: 北部 -->
     <div class="text-center my-8 my-md-12 section-title-wrapper">
 
-      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#A7D7C5" icon="mdi-paw" />北部</h2>
+      <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#6A9C89" icon="mdi-paw" />北部</h2>
     </div>
     <CardCarousel class="mb-6 parallax-carousel" :items="items1" @card-click="openDialog" />
 
     <!-- Row 2: 中部 -->
     <div class="text-center my-8 my-md-12 section-title-wrapper">
-      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#FF8A65" icon="mdi-paw" />中部</h2>
+      <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#A2AF9B" icon="mdi-paw" />中部</h2>
     </div>
     <CardCarousel class="mb-6 parallax-carousel" :items="items2" @card-click="openDialog" />
 
     <!-- Row 3: 南部 -->
     <div class="text-center my-8 my-md-12 section-title-wrapper">
-      <h2 class="text-h4 font-weight-bold text-secondary"> <v-icon color="#C5E1A5" icon="mdi-paw" />南部</h2>
+      <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#A6B28B" icon="mdi-paw" />南部</h2>
     </div>
     <CardCarousel class="parallax-carousel" :items="items3" @card-click="openDialog" />
     <!-- 點開畫面 -->
@@ -336,6 +336,28 @@
 
 p {
   line-height: 1.7;
+}
+
+.custom-container {
+  max-width: calc(100% - 600px); /* 總共左右各 200px */
+  margin: 0 auto;               /* 置中 */
+  padding-left: 0 !important;   /* 移除 container 預設 padding */
+  padding-right: 0 !important;
+}
+.wavy-underline {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 5px;
+  text-underline-offset: 15px; /* 調整波浪線與文字的距離 */
+  text-decoration-color: #FF9B00; /* 🔥 您可以在這裡更換為您喜歡的顏色 */
+}
+/* 大於 960px (md breakpoint) 才套用 */
+@media (max-width: 959px) {
+  .custom-container {
+    max-width: 100%;
+    margin: 0;
+  }
+
 }
 </style>
 

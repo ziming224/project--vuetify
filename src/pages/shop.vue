@@ -6,43 +6,55 @@
     title="公益商城"
   />
 
-  <v-container class="announcement-container my-8" fluid>
-    <v-row justify="center">
-      <v-col cols="12" md="8">
-        <v-card
-          class="pa-4 announcement-card"
-          elevation="4"
-        >
-          <v-row align="center" no-gutters>
-            <!-- 左邊icon -->
-            <v-col class="text-center" cols="2">
-              <v-icon color="secondary" size="48">mdi-bullhorn</v-icon>
-            </v-col>
+  <!-- 公告懸浮按鈕與提示 -->
+  <div class="announcement-fab-container">
+    <div class="fab-tip">點擊查看本月合作單位</div>
+    <v-btn
+      class="announcement-fab"
+      color="#EDA35A"
+      elevation="8"
+      icon="mdi-bullhorn-outline"
+      size="x-large"
+      @click="announcementDialog = true"
+    />
+  </div>
 
-            <!-- 公告文字 -->
-            <v-col cols="10">
-              <h2 class="mb-2 text-h4">本月公益合作捐贈單位</h2>
-              <p class="text-body-1">
-                在本賣場消費之商品都會捐贈與該月合作單位，每月合作對象以公告單位為準。
-              </p>
-              <p class="mb-1 text-h6">
-                💝 本月商品將捐贈給 <strong class="text-secondary">{{ donationUnit.name }}</strong>
-              </p>
-              <p class="text-medium-emphasis mb-0">
-                {{ donationUnit.description }}
-              </p>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <!-- 公告彈窗 -->
+  <v-dialog v-model="announcementDialog" max-width="800px">
+    <v-card class="announcement-card-dialog">
+      <v-card-text class="pa-8">
+        <v-row align="center" no-gutters>
+          <v-col class="text-center mb-4 mb-sm-0" cols="12" sm="3">
+            <v-icon color="secondary" size="80">mdi-bullhorn</v-icon>
+          </v-col>
+          <v-col cols="12" sm="9">
+            <h2 class="mb-4 text-h5 text-md-h4 font-weight-bold">💝 本月商品將捐贈給 <strong class="text-secondary">{{ donationUnit.name }}</strong></h2>
+            <p class="text-body-1">
+              在本賣場消費之商品都會捐贈與該月合作單位，每月合作對象以公告單位為準。<br>
+              這是一個讓愛不流浪的機會。您的每一筆消費，都將直接轉化為浪浪們的伙食、醫療與棲身之所。讓牠們不再於街頭流浪，而是能擁有一個充滿愛與希望的家。<br>
+              讓我們一起，用行動來支持這些無助的生命。您的消費，是浪浪們重獲新生的希望。<br>
+              感謝您的每一次善舉，讓愛的力量，在我們的世界裡循環不息。<br>
+            </p>
+            <p class="text-medium-emphasis mb-0">
+              {{ donationUnit.description }}
+            </p>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions class="pa-4">
+        <v-spacer />
+        <v-btn color="secondary" variant="text" @click="announcementDialog = false">
+          我知道了
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 
-  <v-container>
+  <v-container class="my-8 custom-container">
     <!-- 篩選和排序 -->
     <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
-        <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondaryary" @update:model-value="page = 1">
+        <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondary" @update:model-value="page = 1">
           <v-chip filter :value="''" variant="outlined">
             全部
           </v-chip>
@@ -165,6 +177,7 @@
     name: '浪浪狗狗之家',
     description: '致力於救援與照顧流浪動物',
   })
+  const announcementDialog = ref(false)
   const heroSection = ref(null)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
@@ -302,6 +315,8 @@
 .hero-section {
   height: 100vh;
   overflow: hidden;
+  color: #424242;
+  /* -webkit-text-stroke: 1px lab(80.97% 0 -0.01); */
 }
 
 .hero-img {
@@ -318,21 +333,130 @@
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
-.announcement-card {
+/* 公告懸浮按鈕與提示容器 */
+.announcement-fab-container {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+/* 提示文字泡泡 */
+.fab-tip {
+  position: absolute;
+  right: 72px; /* 按鈕寬度 (56) + 間距 (16) */
+  padding: 8px 16px;
+  background-color: #FFF9BD;
+  color: rgb(6, 6, 6);
   border-radius: 16px;
-  background: linear-gradient(135deg, #f5efe6, #a7d7c5);
-  color: #333;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  animation: float 4s ease-in-out infinite;
+  white-space: nowrap;
+  font-size: 1.1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  pointer-events: none; /* 讓滑鼠可以穿透點擊按鈕 */
+  opacity: 0;
+  transform: translateX(10px);
+  animation: fab-tip-animation 10s ease-in-out infinite;
+  animation-delay: 1s;
+   /* 延遲2秒後開始動畫 */
 }
-.announcement-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+
+/* 提示文字的箭頭 */
+.fab-tip::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid rgba(var(--v-theme-primary-rgb), 0.95);
 }
-@keyframes float {
-  0%   { transform: translateY(0px); }
-  50%  { transform: translateY(-6px); }
-  100% { transform: translateY(0px); }
+
+/* 公告懸浮按鈕 */
+.announcement-fab {
+  /* 移除定位屬性，由父容器 .announcement-fab-container 控制 */
+  animation: fab-pulse 2s infinite;
+}
+
+@keyframes fab-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--v-theme-primary-rgb), 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 20px rgba(var(--v-theme-primary-rgb), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--v-theme-primary-rgb), 0);
+  }
+}
+
+/* 提示文字的動畫 */
+@keyframes fab-tip-animation {
+  0%, 100% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  10%, 50% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  60% {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+}
+
+/* 公告彈窗卡片樣式 */
+.announcement-card-dialog {
+  border-radius: 24px !important; /* 圓角加大，更現代 */
+  border: 2px solid transparent;
+  /* 關鍵：用兩層背景實現漸變邊框 */
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%) border-box;
+}
+
+/* 讓 icon 有呼吸和輕微搖擺的效果 */
+.announcement-card-dialog .v-icon {
+  animation: gentle-ring 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes gentle-ring {
+  0% { transform: rotate(0deg) scale(1); }
+  15% { transform: rotate(10deg) scale(1.1); }
+  30% { transform: rotate(-8deg) scale(1.1); }
+  45% { transform: rotate(5deg) scale(1.1); }
+  60% { transform: rotate(-2deg) scale(1.1); }
+  75% { transform: rotate(0deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1); }
+}
+
+/* 讓 strong 標籤的文字有漸變效果 */
+.announcement-card-dialog .text-secondary {
+  background: linear-gradient(45deg, #48A9A6, #2196F3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+}
+.custom-container {
+  max-width: calc(100% - 400px); /* 總共左右各 200px */
+  margin: 0 auto;               /* 置中 */
+  padding-left: 0 !important;   /* 移除 container 預設 padding */
+  padding-right: 0 !important;
+}
+
+/* 大於 960px (md breakpoint) 才套用 */
+@media (max-width: 959px) {
+  .custom-container {
+    max-width: 100%;
+    margin-block: 24px;
+  }
 }
 </style>
 

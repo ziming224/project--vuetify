@@ -3,50 +3,54 @@
     <!-- 🔹 Lottie Loading 元件畫面 -->
     <LoadingOverlay :show="loading" @update:show="loading = $event" />
 
-<v-app-bar app class="position-fixed elevation-4" color="primary" flat>
-  <v-container fluid class="d-flex align-center position-relative">
+    <v-app-bar app class="position-fixed elevation-4" color="primary" flat>
+      <v-container class="d-flex align-center position-relative" fluid>
 
-    <!-- 標題 (純定位用，可隱藏) -->
-    <v-app-bar-title class="invisible">毛孩救援站</v-app-bar-title>
+        <!-- 標題 (純定位用，可隱藏) -->
+        <v-app-bar-title class="invisible">毛孩救援站</v-app-bar-title>
 
-    <!-- 用img才好控制大小 -->
-<img class="logo-overlay" :src="logoSrc" alt="logo" />
+        <!-- 用img才好控制大小 -->
+        <img alt="logo" class="logo-overlay" :src="logoSrc" @click="router.push('/')">
 
-    <v-spacer /> 
+        <v-spacer />
 
+        <!-- 導覽列 -->
+        <template v-if="mdAndUp">
+          <template v-for="item of navItems" :key="item.to">
+            <v-btn
+              v-if="item.show"
+              class="nav-btn"
+              :prepend-icon="item.icon"
+              :to="item.to"
+            >
+              <span class="nav-btn__text">{{ item.title }}</span>
+              <v-badge
+                v-if="item.to === '/cart' && user.cartTotal > 0"
+                color="red"
+                :content="user.cartTotal"
+                floating
+              />
+            </v-btn>
+          </template>
+          <v-btn
+            v-if="user.isLoggedIn"
+            prepend-icon="mdi-logout"
+            @click="logout"
+          >登出</v-btn>
+        </template>
+      </v-container>
 
- <!-- 導覽列 -->
-    <template v-if="mdAndUp">
-      <template v-for="item of navItems" :key="item.to">
-        <v-btn
-          v-if="item.show"
-          class="nav-btn"
-          :prepend-icon="item.icon"
-          :to="item.to"
-        >
-          {{ item.title }}
-          <v-badge
-            v-if="item.to === '/cart' && user.cartTotal > 0"
-            color="red"
-            :content="user.cartTotal"
-            floating
-          />
-        </v-btn>
-      </template>
-      <v-btn
-        v-if="user.isLoggedIn"
-        prepend-icon="mdi-logout"
-        @click="logout"
-      >登出</v-btn>
-    </template>
-  </v-container>
-
-  <!-- 漢堡選單 (小螢幕) -->
-  <v-app-bar-nav-icon v-if="!mdAndUp" @click="drawer = !drawer" />
-</v-app-bar>
+      <!-- 漢堡選單 (小螢幕) -->
+      <v-app-bar-nav-icon v-if="!mdAndUp" @click="drawer = !drawer" />
+    </v-app-bar>
 
     <!-- 側邊導覽 (小螢幕) -->
-    <v-navigation-drawer v-model="drawer" location="right" temporary>
+    <v-navigation-drawer
+      v-model="drawer"
+      class="fixed-drawer"
+      location="right"
+      temporary
+    >
       <v-list nav>
         <template v-for="item in navItems" :key="item.to">
           <v-list-item
@@ -99,10 +103,10 @@
   import { useRouter } from 'vue-router'
   import { useDisplay } from 'vuetify'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import logoSrc from '@/assets/logo7.1.png'
   import LoadingOverlay from '@/components/LoadingOverlay.vue'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
-  import logoSrc from '@/assets/logo.png'
 
   const user = useUserStore()
   const createSnackbar = useSnackbar()
@@ -175,23 +179,18 @@
     left: 10px;
   }
 }
-.nav-btn {
-  position: relative;
-  overflow: hidden;
+.nav-btn .nav-btn__text {
+  text-decoration: none;
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 6px;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 0.2s ease-in-out;
 }
-.nav-btn::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background-color: currentColor;
-  transition: width 0.3s ease-in-out;
-}
-.nav-btn.v-btn--active::after {
-  width: 50%;
+.nav-btn:hover .nav-btn__text,
+.nav-btn.v-btn--active .nav-btn__text {
+  text-decoration-color: #6A9C89;
 }
 .v-application .v-app-bar {
   z-index: 9999;
@@ -199,19 +198,20 @@
 
 .logo-overlay {
   position: absolute;
-  left: -50px; /* 調整水平位置，增加一些邊距 */
-  top: -65px; /* 向上偏移更多，讓 Logo 更突出 */
+  left: 5px; /* 調整水平位置，增加一些邊距 */
+  top: -140px; /* 向上偏移更多，讓 Logo 更突出 */
   z-index: 10; /* 確保 Logo 在最上層 */
   width: 400px !important; /* 🔥 您可以在這裡自由調整 Logo 的寬度 */
   height: auto; /* 高度自動，保持比例 */
   transition: all 0.3s ease; /* 加入過渡效果，讓變化更平滑 */
+  cursor: pointer;
 }
 /* logo圖片小螢幕 */
 @media (max-width: 600px) {
   .logo-overlay {
     width: 210px !important;
-left: 0;
-    top: -35px;
+    left: 0;
+    top: -55px;
   }
 }
 
@@ -223,6 +223,14 @@ left: 0;
 /* 讓 App Bar 的內容可以超出範圍 */
 :deep(.v-toolbar__content) {
   overflow: visible;
+}
+
+.fixed-drawer {
+  position: fixed !important; /* 固定 */
+  top: 0;
+  right: 0;
+  height: 100vh !important; /* 滿版 */
+  z-index: 2000; /* 確保在上層 */
 }
 
 </style>

@@ -50,10 +50,14 @@
     </v-container>
 
     <!-- SOP -->
-    <v-container class="my-12">
+    <v-container class="custom-container">
       <v-row justify="center">
-        <v-col cols="12">
-          <h2 class="text-h4 text-center mb-8 sop-title">受傷貓狗的緊急應對SOP</h2>
+        <v-col class="text-center" cols="12">
+          <div class="d-inline-block sop-title">
+            <h2 class="text-h4 text-md-h3 font-weight-black wavy-underline">受傷貓狗的緊急應對SOP</h2>
+            <v-divider class="my-4 mx-auto border-opacity-100" color="secondary" length="200" thickness="4" />
+          </div>
+          <p class="text-h6 text-medium-emphasis mt-4">當您遇到需要幫助的牠，請保持冷靜，參考以下步驟</p>
         </v-col>
       </v-row>
       <template v-for="(item, index) in sopItems" :key="item.title">
@@ -149,7 +153,7 @@
       },
       opacity: 0,
       // y: 50,
-      duration: 0.8,
+      duration: 1.2,
       stagger: 0.2,
       ease: 'power3.out',
     })
@@ -163,7 +167,7 @@
       },
       opacity: 0,
       y: 50,
-      duration: 1,
+      duration: 1.5,
       ease: 'power3.out',
     })
 
@@ -172,7 +176,7 @@
     for (const row of sopRows) {
       gsap.from(row.children, {
         scrollTrigger: { trigger: row, start: 'top 85%', toggleActions: 'play none none none' },
-        opacity: 0, y: 50, duration: 0.8, stagger: 0.2, ease: 'power3.out',
+        opacity: 0, y: 50, duration: 1.5, stagger: 0.2, ease: 'power3.out',
       })
     }
   })
@@ -247,6 +251,31 @@ border-radius: 40% 40% 30% 30%;
   border-radius: 37% 63% 46% 54% / 48% 55% 45% 52%;
   transform: rotate(3deg);
 } */
+.custom-container {
+  max-width: calc(100% - 600px); /* 總共左右各 200px */
+  margin-block: 48px;           /* 增加上下邊距，取代 my-12 */
+  margin-inline: auto;          /* 置中 */
+  padding-inline: 0 !important; /* 移除 container 預設 padding */
+}
+
+.wavy-underline {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-thickness: 5px;
+  text-underline-offset: 15px; /* 調整波浪線與文字的距離 */
+  text-decoration-color: #FF9B00; /* 🔥 您可以在這裡更換為您喜歡的顏色 */
+}
+
+/* 大於 960px (md breakpoint) 才套用 */
+@media (max-width: 959px) {
+  .custom-container {
+    max-width: 100%;
+    /* 移除會造成問題的 margin: 0，讓 margin-block 生效 */
+    /* 在小螢幕上恢復 v-container 的預設左右內距 */
+    padding-inline: 16px !important;
+  }
+}
+
 </style>
 
 <route lang="yaml">
