@@ -31,7 +31,7 @@
                 </v-col>
                 <v-col cols="6" md="3" sm="3">
                   <div class="text-caption text-medium-emphasis">總金額</div>
-                  <div class="font-weight-bold text-primary">
+                  <div class="font-weight-bold text-secondary">
                     NT$ {{ order.totalPrice.toLocaleString() }}
                   </div>
                 </v-col>
@@ -67,7 +67,7 @@
               <v-divider class="my-2" />
               <div class="d-flex justify-end align-center pa-2">
                 <span class="text-h6 font-weight-bold">總計：</span>
-                <span class="text-h6 font-weight-bold text-primary ml-2">NT$ {{ order.totalPrice.toLocaleString() }}</span>
+                <span class="text-h6 font-weight-bold text-secondary ml-2">NT$ {{ order.totalPrice.toLocaleString() }}</span>
               </div>
             </v-expansion-panel-text>
           </v-expansion-panel>
