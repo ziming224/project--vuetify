@@ -23,7 +23,7 @@
     show: Boolean,
     animationSrc: {
       type: String,
-      default: '/SaladCat.lottie',
+      default: `${import.meta.env.BASE_URL}SaladCat.lottie`,
     },
   })
 </script>
