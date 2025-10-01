@@ -12,9 +12,25 @@
     <v-text-field
       v-model="form.email"
       class="mb-4"
-      label="信箱"
+      label="變更信箱"
       :rules="[rules.required, rules.email]"
       type="email"
+      variant="outlined"
+    />
+    <v-text-field
+      v-model="form.password"
+      class="mb-4"
+      label="原始密碼"
+      :rules="[rules.required, rules.minLength]"
+      type="password"
+      variant="outlined"
+    />
+    <v-text-field
+      v-model="form.newPassword"
+      class="mb-4"
+      label="變更密碼"
+      :rules="[rules.required, rules.minLength]"
+      type="password"
       variant="outlined"
     />
     <div class="text-center">
