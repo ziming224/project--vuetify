@@ -23,7 +23,7 @@
     show: Boolean,
     animationSrc: {
       type: String,
-      default: '/public/SaladCat.lottie',
+      default: '/SaladCat.lottie',
     },
   })
 </script>
