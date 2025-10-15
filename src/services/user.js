@@ -1,25 +1,31 @@
 import apiService from './api'
 
 export default {
-  create (data) {
+  create(data) {
     return apiService.api.post('/user', data)
   },
-  login (data) {
+  login(data) {
     return apiService.api.post('/user/login', data)
   },
-  profile () {
+  profile() {
     return apiService.apiAuth.get('/user/profile')
   },
-  refresh () {
+  refresh() {
     return apiService.apiAuth.patch('/user/refresh')
   },
-  logout () {
+  logout() {
     return apiService.apiAuth.delete('/user/logout')
   },
-  cart (data) {
+  cart(data) {
     return apiService.apiAuth.patch('/user/cart', data)
   },
-  getCart () {
+  getCart() {
     return apiService.apiAuth.get('/user/cart')
+  },
+  addFavorite(data) {
+    return apiService.apiAuth.post('/user/favorites', data)
+  },
+  getFavorites() {
+    return apiService.apiAuth.get('/user/favorites')
   },
 }

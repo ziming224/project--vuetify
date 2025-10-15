@@ -102,3 +102,9 @@
     }
   }
 </script>
+<route lang="yaml">
+  meta:
+    title: '會員中心'
+    login: 'login-only'
+    admin: false
+</route>

@@ -30,6 +30,14 @@
               height="200px"
               :src="item.image"
             />
+            <v-btn
+              class="favorite-btn"
+              :color="favorites.includes(item._id) ? 'red' : '#BDBDBD'"
+              :icon="favorites.includes(item._id) ? 'mdi-heart' : 'mdi-heart-outline'"
+              size="small"
+              variant="text"
+              @click.stop="$emit('favorite-click', item)"
+            />
           </div>
           <v-card-title class="pt-4">{{ item.title }}</v-card-title>
           <v-card-subtitle>{{ item.short }}</v-card-subtitle>
@@ -57,12 +65,17 @@
   import 'swiper/css/navigation'
   import 'swiper/css/pagination'
 
+  // 告父組件傳入子組件的資料，設定類型、是否必填及預設值
   defineProps({
     items: { type: Array, required: true },
     title: { type: String, default: '' },
+    favorites: {
+      type: Array,
+      default: () => [],
+    },
   })
 
-  defineEmits(['card-click'])
+  defineEmits(['card-click', 'favorite-click'])
 
   const breakpoints = {
     320: { slidesPerView: 1, spaceBetween: 10 },
@@ -103,6 +116,7 @@
 
 .img-wrapper {
   overflow: hidden;
+  position: relative;
   /* v-card 已經有圓角，這裡可以移除，避免樣式衝突 */
 }
 
@@ -123,5 +137,18 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  font-size: 20px;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.7));
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1); /* 懸停時放大效果 */
 }
 </style>

@@ -19,19 +19,19 @@
 
       <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#6A9C89" icon="mdi-paw" />北部</h2>
     </div>
-    <CardCarousel class="mb-6 parallax-carousel" :items="items1" @card-click="openDialog" />
+    <CardCarousel class="mb-6 parallax-carousel" :items="items1" :favorites="favoriteIds" @card-click="openDialog" @favorite-click="handleFavorite" />
 
     <!-- Row 2: 中部 -->
     <div class="text-center my-8 my-md-12 section-title-wrapper">
       <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#A2AF9B" icon="mdi-paw" />中部</h2>
     </div>
-    <CardCarousel class="mb-6 parallax-carousel" :items="items2" @card-click="openDialog" />
+    <CardCarousel class="mb-6 parallax-carousel" :items="items2" :favorites="favoriteIds" @card-click="openDialog" @favorite-click="handleFavorite" />
 
     <!-- Row 3: 南部 -->
     <div class="text-center my-8 my-md-12 section-title-wrapper">
       <h2 class="wavy-underline text-h4 font-weight-bold text-secondary"> <v-icon color="#A6B28B" icon="mdi-paw" />南部</h2>
     </div>
-    <CardCarousel class="parallax-carousel" :items="items3" @card-click="openDialog" />
+    <CardCarousel class="parallax-carousel" :items="items3" :favorites="favoriteIds" @card-click="openDialog" @favorite-click="handleFavorite" />
     <!-- 點開畫面 -->
     <v-dialog v-model="dialog" max-width="600px" scrollable>
       <v-card v-if="selected" class="org-dialog-card">
@@ -42,7 +42,7 @@
           height="250px"
           :src="selected.image"
         >
-          <v-card-title class="text-white text-h5" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">
+          <v-card-title class="text-white text-h5" style="white-space: normal; word-break: break-word; text-shadow: 1px 1px 3px rgba(0,0,0,0.7);">
             {{ selected.title }}
           </v-card-title>
         </v-img>
@@ -105,8 +105,7 @@
           </v-list-subheader>
           <v-list-item v-if="selected.openingHours" prepend-icon="mdi-clock-outline">
             <v-list-item-title style="white-space: pre-line; line-height: 1.6;">
-              <!-- 如有欄位空白會是string - undefined，這樣單用||沒用-->
-              {{ (!selected.openingHours || selected.openingHours === 'undefined') ? '尚未提供' : selected.openingHours }}
+              <span v-html="(!selected.openingHours || selected.openingHours === 'undefined') ? '尚未提供' : selected.openingHours.replace(/\n/g, '<br>')"></span>
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -122,18 +121,26 @@
 
 <script setup>
   import { gsap } from 'gsap'
+  import { storeToRefs } from 'pinia'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import { nextTick, onMounted, ref } from 'vue'
+  import { nextTick, onMounted, ref, watch } from 'vue'
   import { useSnackbar } from 'vuetify-use-dialog'
   import CardCarousel from '@/components/CardCarousel.vue'
+  import { useUserStore } from '@/stores/user'
   import orgService from '@/services/org'
+  import userService from '@/services/user'
 
   gsap.registerPlugin(ScrollTrigger)
   const createSnackbar = useSnackbar()
+  const user = useUserStore()
+  const { isLoggedIn } = storeToRefs(user)
 
   // GSAP 動畫用的 refs
   const heroTitle = ref(null)
   const heroSubtitle = ref(null)
+
+  // 用於控制 v-overlay 的讀取狀態
+  const loading = ref(false)
 
   const dialog = ref(false)
   const selected = ref(null)
@@ -142,6 +149,9 @@
   const items1 = ref([])
   const items2 = ref([])
   const items3 = ref([])
+
+  // 存放已收藏組織的 ID 陣列
+  const favoriteIds = ref([])
 
   const openDialog = item => {
     selected.value = item
@@ -163,6 +173,7 @@
 
         return {
           // 將後端欄位 (如 org.name) 映射到前端屬性 (如 title)
+          _id: org._id, // 確保 ID 被傳遞
           title: org.name,
           short: shortDescription, // 卡片上顯示的簡短描述
           detail: org.description, // 彈出視窗中顯示的完整描述
@@ -191,6 +202,57 @@
         text: error?.response?.data?.message || '無法載入組織資料，請稍後再試',
         snackbarProps: { color: 'red' },
       })
+    }
+  }
+
+  // 獲取使用者收藏列表的函式
+  const fetchFavorites = async () => {
+    // 只有在登入狀態下才獲取收藏列表
+    if (!isLoggedIn.value) return
+    try {
+      const { data } = await userService.getFavorites()
+      // 將獲取到的收藏項目陣列轉換為只包含 ID 的陣列
+      favoriteIds.value = data.result.map(fav => fav._id)
+    } catch (error) {
+      console.error('無法獲取收藏列表:', error)
+    }
+  }
+
+  // 監聽登入狀態的變化
+  watch(isLoggedIn, (newValue) => {
+    if (newValue) {
+      // 如果使用者登入，就重新獲取收藏列表
+      fetchFavorites()
+    } else {
+      // 如果使用者登出，就清空收藏列表
+      favoriteIds.value = []
+    }
+  })
+
+  // 處理愛心點擊事件的函式
+  const handleFavorite = async (item) => {
+    if (!isLoggedIn.value) {
+      createSnackbar({ text: '請先登入', snackbarProps: { color: 'warning' } })
+      return
+    }
+
+    loading.value = true // 開始載入
+    try {
+      // 呼叫後端的收藏/取消收藏 API
+      // 注意：後端需要一個名為 'org' 的 body 欄位
+      const { data } = await userService.addFavorite({ org: item._id })
+
+      // 後端回傳的是完整的物件陣列，我們需要將它 map 成 ID 陣列
+      favoriteIds.value = data.result.map(fav => fav._id)
+      createSnackbar({ text: '操作成功', snackbarProps: { color: 'success', timeout: 2000 } })
+    } catch (error) {
+      console.error('收藏操作失敗:', error)
+      // 當 API 請求失敗時，顯示失敗訊息
+      createSnackbar({ text: error?.response?.data?.message || '操作失敗，請稍後再試', snackbarProps: { color: 'red', timeout: 2000 } })
+      // 並且重新從後端獲取一次最正確的收藏列表，以同步前端狀態
+      await fetchFavorites()
+    } finally {
+      loading.value = false // 結束載入
     }
   }
 
@@ -296,6 +358,7 @@
 
   onMounted(() => {
     fetchOrgs()
+    fetchFavorites() // 在組件掛載時獲取收藏列表
     setupAnimations()
   })
 </script>

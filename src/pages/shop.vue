@@ -162,6 +162,7 @@
 
 <script setup>
   import gsap from 'gsap'
+  import { storeToRefs } from 'pinia'
   import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
@@ -181,6 +182,7 @@
   const heroSection = ref(null)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
+  const { isLogin } = storeToRefs(user)
   const router = useRouter()
 
   const products = ref([])
@@ -261,7 +263,7 @@
   getProducts()
 
   const handleAddToCart = async productId => {
-    if (!user.isLogin) {
+    if (!isLogin.value) {
       router.push('/auth')
       return
     }
