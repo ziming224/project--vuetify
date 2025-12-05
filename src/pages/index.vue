@@ -28,8 +28,8 @@
         </p>
       </div>
     </v-parallax>
-    <!-- 分頁連結 -->
 
+    <!-- 分頁連結 -->
     <v-container class="my-12">
       <v-row>
         <v-col v-for="section in sections" :key="section.to" cols="12" md="4">
@@ -55,13 +55,13 @@
         <v-col class="text-center" cols="12">
           <div class="d-inline-block sop-title">
             <h2 class="text-h4 text-md-h3 font-weight-black wavy-underline">受傷貓狗的緊急應對SOP</h2>
-            <v-divider class="my-4 mx-auto border-opacity-100" color="secondary" length="200" thickness="4" />
           </div>
           <p class="text-h6 text-medium-emphasis mt-4">當您遇到需要幫助的牠，請保持冷靜，參考以下步驟</p>
         </v-col>
       </v-row>
       <template v-for="(item, index) in sopItems" :key="item.title">
         <v-row class="align-center my-8 my-md-12 sop-row">
+          <!-- mdAndUp：Vuetify useDisplay composable 的響應式變數。瀏覽器視窗寬度大於等於 md 中斷點（960px）時，值為 true；反之則為 false。響應式排版效果 -->
           <v-col class="pa-4 pa-md-10" cols="12" md="6" :order="mdAndUp ? (index % 2 === 0 ? 1 : 2) : 1">
             <v-img
               aspect-ratio="1"
@@ -74,11 +74,9 @@
             <div class="pa-md-8 py-4">
               <div class="d-flex align-center mb-4">
                 <v-avatar class="mr-4 elevation-4" :color="item.color" size="64">
-                  <v-icon v-if="item.icon" color="white" :icon="item.icon" size="40" />
-                  <span v-else class="text-h5 font-weight-bold text-white">{{ index + 1 }}</span>
+                  <v-icon color="white" :icon="item.icon" size="40" />
                 </v-avatar>
                 <div>
-                  <div class="text-overline" :class="`text-${item.color}`">STEP {{ index + 1 }}</div>
                   <h3 class="text-h5 font-weight-bold">{{ item.title }}</h3>
                 </div>
               </div>
@@ -88,12 +86,16 @@
                   :key="pointIndex"
                   class="d-flex align-start mb-4"
                 >
+                <!-- 貓掌icon -->
                   <v-icon class="mr-3 mt-1 flex-shrink-0" :color="item.color" icon="mdi-paw" size="small" />
                   <p class="text-body-1" style="line-height: 1.75;">
                     <!-- 冒號前字體為粗體 -->
                     <template v-if="point.includes('：')">
+                      <!-- 檢查 point 這個字串是否包含全形的冒號 ： -->
                       <strong>{{ point.split('：')[0] }}：</strong>
+                      <!-- point.split('：')會用冒號 ： 將字串分割成一個陣列，並在後面手動補上一個冒號 ： -->
                       <span>{{ point.split('：').slice(1).join('：') }}</span>
+                      <!-- 從陣列的索引 1 開始，提取所有後面的元素，並建立一個新陣列，將新陣列中的所有元素用冒號 ： 連接回一個字串。 -->
                     </template>
                     <template v-else>
                       {{ point }}
@@ -180,12 +182,15 @@
       })
     }
   })
+
+  // 卡片資訊
   const sections = ref([
     { title: '救援單位', subtitle: '查看所有救援單位', icon: 'mdi-home-heart', to: '/org', color: 'sectionOrg' },
     { title: '公益商城', subtitle: '購物同時做公益', icon: 'mdi-store', to: '/shop', color: 'sectionShop' },
     { title: '遺失啟示', subtitle: '寵物登記管理資訊網', icon: 'mdi-heart-search', href: 'https://www.pet.gov.tw/Web/O203.aspx?PG=1' },
   ])
 
+  // SOP 資訊
   const sopItems = ref([
     {
       title: '第一步：確保自身和動物的安全',
@@ -247,13 +252,10 @@ border-radius: 40% 40% 30% 30%;
  transition: all 0.5s ease-in-out;
 }
 
-/* .sop-row:hover .blob-shape {
-  border-radius: 37% 63% 46% 54% / 48% 55% 45% 52%;
-  transform: rotate(3deg);
-} */
+
 .custom-container {
-  max-width: calc(100% - 600px); /* 總共左右各 200px */
-  margin-block: 48px;           /* 增加上下邊距，取代 my-12 */
+  max-width: calc(100% - 600px); /*總共左右各 00px*/
+   margin-block: 48px;          /* 增加上下邊距，取代 my-12 */
   margin-inline: auto;          /* 置中 */
   padding-inline: 0 !important; /* 移除 container 預設 padding */
 }
@@ -263,7 +265,14 @@ border-radius: 40% 40% 30% 30%;
   text-decoration-style: wavy;
   text-decoration-thickness: 5px;
   text-underline-offset: 15px; /* 調整波浪線與文字的距離 */
-  text-decoration-color: #FF9B00; /* 🔥 您可以在這裡更換為您喜歡的顏色 */
+  text-decoration-color: #FF9B00; 
+}
+
+/* 平板尺寸 (Vuetify md: 960px ~ 1280px)，左右各 150px 間距 */
+@media (min-width: 960px) and (max-width: 1279px) {
+  .custom-container {
+    max-width: calc(100% - 300px);
+  }
 }
 
 /* 大於 960px (md breakpoint) 才套用 */
