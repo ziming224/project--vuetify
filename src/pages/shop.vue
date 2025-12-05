@@ -446,20 +446,8 @@
   background-clip: text;
   text-fill-color: transparent;
 }
-.custom-container {
-  max-width: calc(100% - 400px); /* 總共左右各 200px */
-  margin: 0 auto;               /* 置中 */
-  padding-left: 0 !important;   /* 移除 container 預設 padding */
-  padding-right: 0 !important;
-}
 
-/* 大於 960px (md breakpoint) 才套用 */
-@media (max-width: 959px) {
-  .custom-container {
-    max-width: 100%;
-    margin-block: 24px;
-  }
-}
+
 </style>
 
 <route lang="yaml">

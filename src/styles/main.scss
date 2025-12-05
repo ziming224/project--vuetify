@@ -1,0 +1,36 @@
+// 全域共用樣式
+
+// .custom-container 用於限制主要內容區域的最大寬度，並在不同螢幕尺寸下提供合適的邊距。
+// 預設（大螢幕 > 1280px）
+.custom-container {
+    // 在大螢幕上，左右各有 300px 的邊距
+    max-width: calc(100% - 600px);
+    margin-inline: auto;
+    /* 水平置中 */
+    padding-inline: 0 !important;
+    /* 移除 Vuetify v-container 的預設左右內距 */
+}
+
+/*
+  Vuetify Breakpoints:
+  - xs: < 600px
+  - sm: 600px > < 960px
+  - md: 960px > < 1280px
+  - lg: 1280px > < 1920px
+  - xl: > 1920px
+*/
+
+// 平板尺寸 (md: 960px ~ 1279px)，左右各 150px 間距
+@media (max-width: 1279px) {
+    .custom-container {
+        max-width: calc(100% - 300px);
+    }
+}
+
+// 手機與小平板尺寸 (< 960px)
+@media (max-width: 959px) {
+    .custom-container {
+        max-width: 100%; // 滿版
+        padding-inline: 16px !important; // 恢復一些內距，避免內容貼邊
+    }
+}

@@ -401,27 +401,16 @@ p {
   line-height: 1.7;
 }
 
-.custom-container {
-  max-width: calc(100% - 600px); /* 總共左右各 200px */
-  margin: 0 auto;               /* 置中 */
-  padding-left: 0 !important;   /* 移除 container 預設 padding */
-  padding-right: 0 !important;
-}
+
 .wavy-underline {
   text-decoration-line: underline;
   text-decoration-style: wavy;
   text-decoration-thickness: 5px;
   text-underline-offset: 15px; /* 調整波浪線與文字的距離 */
-  text-decoration-color: #FF9B00; /* 🔥 您可以在這裡更換為您喜歡的顏色 */
+  text-decoration-color: #FF9B00; 
 }
-/* 大於 960px (md breakpoint) 才套用 */
-@media (max-width: 959px) {
-  .custom-container {
-    max-width: 100%;
-    margin: 0;
-  }
 
-}
+
 </style>
 
 <route lang="yaml">

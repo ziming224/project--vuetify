@@ -12,6 +12,7 @@ import { zhHant } from 'vuetify/locale'
 // Styles
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
+import '@/styles/main.scss'
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   components,

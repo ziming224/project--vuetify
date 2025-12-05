@@ -252,37 +252,12 @@ border-radius: 40% 40% 30% 30%;
  transition: all 0.5s ease-in-out;
 }
 
-
-.custom-container {
-  max-width: calc(100% - 600px); /*總共左右各 00px*/
-   margin-block: 48px;          /* 增加上下邊距，取代 my-12 */
-  margin-inline: auto;          /* 置中 */
-  padding-inline: 0 !important; /* 移除 container 預設 padding */
-}
-
 .wavy-underline {
   text-decoration-line: underline;
   text-decoration-style: wavy;
   text-decoration-thickness: 5px;
   text-underline-offset: 15px; /* 調整波浪線與文字的距離 */
   text-decoration-color: #FF9B00; 
-}
-
-/* 平板尺寸 (Vuetify md: 960px ~ 1280px)，左右各 150px 間距 */
-@media (min-width: 960px) and (max-width: 1279px) {
-  .custom-container {
-    max-width: calc(100% - 300px);
-  }
-}
-
-/* 大於 960px (md breakpoint) 才套用 */
-@media (max-width: 959px) {
-  .custom-container {
-    max-width: 100%;
-    /* 移除會造成問題的 margin: 0，讓 margin-block 生效 */
-    /* 在小螢幕上恢復 v-container 的預設左右內距 */
-    padding-inline: 16px !important;
-  }
 }
 
 </style>
