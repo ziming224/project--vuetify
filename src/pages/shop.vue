@@ -23,11 +23,8 @@
   <v-dialog v-model="announcementDialog" max-width="800px">
     <v-card class="announcement-card-dialog">
       <v-card-text class="pa-8">
-        <v-row align="center" no-gutters>
-          <v-col class="text-center mb-4 mb-sm-0" cols="12" sm="3">
-            <v-icon color="secondary" size="80">mdi-bullhorn</v-icon>
-          </v-col>
-          <v-col cols="12" sm="9">
+        <v-row align="center"no-gutters justify="center">
+          <v-col cols="12" sm="9" >
             <h2 class="mb-4 text-h5 text-md-h4 font-weight-bold">💝 本月商品將捐贈給 <strong class="text-secondary">{{ donationUnit.name }}</strong></h2>
             <p class="text-body-1">
               在本賣場消費之商品都會捐贈與該月合作單位，每月合作對象以公告單位為準。<br>
@@ -163,7 +160,6 @@
 <script setup>
   import gsap from 'gsap'
   import { storeToRefs } from 'pinia'
-  import { ScrollTrigger } from 'gsap/ScrollTrigger'
   import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
@@ -179,7 +175,6 @@
     description: '致力於救援與照顧流浪動物',
   })
   const announcementDialog = ref(false)
-  const heroSection = ref(null)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
   const { isLogin } = storeToRefs(user)
@@ -281,59 +276,13 @@
     }
   }
 
-  gsap.registerPlugin(ScrollTrigger)
   onMounted(() => {
     // 强制滚动到页面顶部，解决 GSAP pin 与 Vue Router scrollBehavior 的冲突
     window.scrollTo(0, 0)
-
-    const el = heroSection.value
-
-    const animation = gsap.fromTo(
-      el,
-      { scale: 1, y: 0 },
-      {
-        scale: 0.5, // 縮小到一半
-        y: -200, // 上移
-        transformOrigin: 'top center',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-          pin: true, // 🚀 這裡關鍵，會固定在上方
-          pinSpacing: false, // 避免多餘空白
-        },
-      },
-    )
-
-    onUnmounted(() => {
-      // 这是一个好习惯，在组件卸载时销毁 ScrollTrigger 实例以防止内存泄漏
-      animation.scrollTrigger?.kill()
-    })
   })
 </script>
 
 <style scoped>
-.hero-section {
-  height: 100vh;
-  overflow: hidden;
-  color: #424242;
-  /* -webkit-text-stroke: 1px lab(80.97% 0 -0.01); */
-}
-
-.hero-img {
-  height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding-top: 20vh;
-}
-
-.hero-text {
-  text-align: center;
-  color: white;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
-}
 
 /* 公告懸浮按鈕與提示容器 */
 .announcement-fab-container {

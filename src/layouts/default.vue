@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <!-- 🔹 Lottie Loading 元件畫面 -->
+    <!--  Lottie Loading 元件畫面 -->
     <LoadingOverlay :show="loading" @update:show="loading = $event" />
 
     <v-app-bar app class="position-fixed elevation-4" color="primary" flat>
@@ -70,10 +70,12 @@
       </v-list>
     </v-navigation-drawer>
 
+<!-- 內容 -->
     <v-main class="main-background">
       <router-view :key="$route.fullPath" />
     </v-main>
 
+<!-- 頁尾 -->
     <v-footer class="text-center d-flex flex-column ga-2 py-5" color="footerBackground" padless>
       <div class="d-flex ">
         <v-btn
@@ -116,7 +118,7 @@
   const { mdAndUp } = useDisplay()
   const drawer = ref(false)
 
-  // 🔹 載入動畫狀態
+  //  載入動畫狀態
   const loading = ref(true)
 
   // 模擬載入完成 (可改成 API 完成後再關閉)
@@ -201,9 +203,9 @@
   left: 5px; /* 調整水平位置，增加一些邊距 */
   top: -140px; /* 向上偏移更多，讓 Logo 更突出 */
   z-index: 10; /* 確保 Logo 在最上層 */
-  width: 400px !important; /* 🔥 您可以在這裡自由調整 Logo 的寬度 */
+  width: 400px !important; 
   height: auto; /* 高度自動，保持比例 */
-  transition: all 0.3s ease; /* 加入過渡效果，讓變化更平滑 */
+  transition: all 0.3s ease; /* 加入過渡效果 */
   cursor: pointer;
 }
 /* logo圖片小螢幕 */

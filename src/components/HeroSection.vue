@@ -52,7 +52,7 @@
           start: 'top top',
           end: 'bottom top',
           scrub: true,
-          pin: true, // 🚀 這裡關鍵，會固定在上方
+          pin: true, // 關鍵，會固定在上方
           pinSpacing: false, // 避免多餘空白
         },
       },

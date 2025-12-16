@@ -1,3 +1,4 @@
+<!-- 沒用到的元件 -->
 <template>
   <v-card class="glowing-card" v-bind="$attrs">
     <slot />

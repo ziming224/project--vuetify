@@ -41,7 +41,7 @@
         color="secondary"
         prepend-icon="mdi-cart-plus"
         text="加入購物車"
-        variant="tonal"
+        variant="tonal" 
         @click.prevent="addToCart"
       /> 
 
@@ -53,17 +53,25 @@
   import { useRouter } from 'vue-router'
   import { useUserStore } from '@/stores/user'
 
-  const props = defineProps(['_id', 'image', 'name', 'category', 'price', 'description'])
-  // Props definition assuming product object structure
+  // 使用物件語法來定義 props，提供更強的型別檢查和可讀性
+  const props = defineProps({
+    _id: { type: String, required: true },
+    image: { type: String, required: true },
+    name: { type: String, required: true },
+    category: { type: String, required: true },
+    price: { type: Number, required: true },
+    description: { type: String, required: true }
+  })
 
-  // Emits definition for component events
-  const emit = defineEmits(['add-to-cart'])
+  const emit = defineEmits(['add-to-cart']) 
   const router = useRouter()
   const user = useUserStore()
 
   const addToCart = () => {
-    emit('add-to-cart')
+    // 將產品 ID 傳遞出去，讓父層更容易處理
+    emit('add-to-cart', props._id)
   }
+
   const goToProduct = () => {
     router.push('/product/' + props._id)
   }
@@ -80,16 +88,21 @@
 }
 
 .product-description {
+  /* 啟用舊版的 Flexbox 模型 */
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  /* 標準語法，應放在前面 */
+  line-clamp: 3;
+  /* 舊的、帶前綴的語法，作為後備 */
+  -webkit-line-clamp: 3;
+  /* 讓盒子內容垂直排列 */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 4.5em; /* Fallback for height (3 * 1.5em line-height) */
+  min-height: 4.5em; 
   line-height: 1.5em;
 }
 
-/* --- Image Zoom on Hover --- */
+/* :deep()  取消 scoped 限制，讓樣式「穿透」進子元件 */
 .product-card :deep(.v-img__img) {
   transition: transform 0.3s ease-in-out;
 }
