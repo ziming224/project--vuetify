@@ -24,6 +24,7 @@
               :to="item.to"
             >
               <span class="nav-btn__text">{{ item.title }}</span>
+              <!-- 購物車紅點 -->
               <v-badge
                 v-if="item.to === '/cart' && user.cartTotal > 0"
                 color="red"
@@ -181,19 +182,28 @@
     left: 10px;
   }
 }
+/* 設定一條看不見的波浪底線 */
 .nav-btn .nav-btn__text {
   text-decoration: none;
+  /* 宣告要有一條底線 */
   text-decoration-line: underline;
+  /* 波浪狀 */
   text-decoration-style: wavy;
+  /* 底線的粗細 */
   text-decoration-thickness: 1.5px;
+  /* 設定底線與文字的距離 */
   text-underline-offset: 6px;
+  /*  讓底線的顏色變成透明  */
   text-decoration-color: transparent;
   transition: text-decoration-color 0.2s ease-in-out;
 }
+
+/* 讓底線現形 */
 .nav-btn:hover .nav-btn__text,
 .nav-btn.v-btn--active .nav-btn__text {
   text-decoration-color: #6A9C89;
 }
+
 .v-application .v-app-bar {
   z-index: 9999;
 }

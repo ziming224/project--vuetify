@@ -47,9 +47,9 @@
     </v-card>
   </v-dialog>
 
+  <!-- 篩選和排序 -->
   <v-container class="my-8 custom-container">
-    <!-- 篩選和排序 -->
-    <v-row align="center" class="mb-4">
+    <!-- <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
         <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondary" @update:model-value="page = 1">
           <v-chip filter :value="''" variant="outlined">
@@ -101,11 +101,10 @@
           </v-list>
         </v-menu>
       </v-col>
-    </v-row>
+    </v-row> -->
 
     <v-divider class="mb-8" />
 
-    <!-- Products Grid -->
     <v-row v-if="filteredProducts.length > 0">
       <v-col
         v-for="product in currentPageProducts"
@@ -114,7 +113,6 @@
         lg="4"
         md="6"
       >
-        <!-- <ProductCard v-bind="product" /> -->
         <ProductCard
           v-bind="product"
           @add-to-cart="handleAddToCart(product._id)"
@@ -130,7 +128,6 @@
       </v-col>
     </v-row>
 
-    <!-- Empty State -->
     <v-row v-else>
       <v-col cols="12">
         <v-empty-state
@@ -142,17 +139,6 @@
       </v-col>
     </v-row>
 
-    <!-- Pagination -->
-    <!-- <v-row v-if="totalPages > 1" class="mt-8">
-      <v-col>
-        <v-pagination
-          v-model="page"
-          circle
-          :length="totalPages"
-          :total-visible="5"
-        />
-      </v-col>
-    </v-row> -->
 
   </v-container>
 </template>
