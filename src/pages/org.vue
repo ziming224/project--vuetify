@@ -152,7 +152,7 @@
 
   // 存放已收藏組織的 ID 陣列
   const favoriteIds = ref([])
-
+// 點開卡片
   const openDialog = item => {
     selected.value = item
     dialog.value = true

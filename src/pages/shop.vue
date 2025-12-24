@@ -49,7 +49,7 @@
 
   <!-- 篩選和排序 -->
   <v-container class="my-8 custom-container">
-    <!-- <v-row align="center" class="mb-4">
+    <v-row align="center" class="mb-4">
       <v-col cols="12" md="8">
         <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondary" @update:model-value="page = 1">
           <v-chip filter :value="''" variant="outlined">
@@ -101,7 +101,7 @@
           </v-list>
         </v-menu>
       </v-col>
-    </v-row> -->
+    </v-row>
 
     <v-divider class="mb-8" />
 
