@@ -1,1 +1,0 @@
-import{aD as r}from"./index-BUE9pJ4F.js";const u={create(t){return r.apiAuth.post("/product",t)},getAll(){return r.apiAuth.get("/product/all")},get(){return r.api.get("/product")},getId(t){return r.api.get("/product/"+t)},update(t,e){return r.apiAuth.patch(`/product/${t}`,e)}};export{u as p};
