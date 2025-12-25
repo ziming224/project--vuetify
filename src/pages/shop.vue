@@ -47,10 +47,51 @@
     </v-card>
   </v-dialog>
 
-  <!-- 篩選和排序 -->
   <v-container class="my-8 custom-container">
-    <v-row align="center" class="mb-4">
-      <v-col cols="12" md="8">
+    <v-row align="center">
+      <!-- 搜尋 -->
+      <v-col cols="12" md="10">
+        <v-text-field
+          v-model="search"
+          clearable
+          density="compact"
+          flat
+          hide-details
+          placeholder="搜尋商品"
+          prepend-inner-icon="mdi-magnify"
+          variant="solo-filled"
+          @update:model-value="page = 1"
+        />
+      </v-col>
+
+      <!-- 排序按鈕 -->
+        <v-menu>
+          <!-- 插槽 -->
+          <template #activator="{ props }">
+            <v-btn
+              v-bind="props"
+              append-icon="mdi-chevron-down"
+              :ripple="false"
+              variant="text"
+            >
+            {{ sortOptions[selectedSort].text }}
+              </v-btn>
+          </template>
+          <v-list>
+            <!-- 每個項目跑回圈，點擊每個選項後去換索引，頁面重置到第一頁 -->
+            <v-list-item
+              v-for="(option, i) in sortOptions"
+              :key="option.text"
+              @click="selectedSort = i; page = 1"
+            >
+              <v-list-item-title>{{ option.text }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+    </v-row>
+    
+  <!-- 篩選 -->
+          <v-col cols="12" md="4">
         <v-chip-group v-model="selectedCategory" mandatory selected-class="text-secondary" @update:model-value="page = 1">
           <v-chip filter :value="''" variant="outlined">
             全部
@@ -66,44 +107,8 @@
           </v-chip>
         </v-chip-group>
       </v-col>
-      <v-col class="d-flex align-center" cols="12" md="4">
-        <v-text-field
-          v-model="search"
-          class="mr-2"
-          clearable
-          density="compact"
-          flat
-          hide-details
-          placeholder="搜尋商品"
-          prepend-inner-icon="mdi-magnify"
-          variant="solo-filled"
-          @update:model-value="page = 1"
-        />
-        <v-menu>
-          <template #activator="{ props }">
-            <v-btn
-              v-bind="props"
-              icon="mdi-sort"
-              :ripple="false"
-              variant="text"
-            />
-            {{ sortOptions[selectedSort].text }}
-          </template>
-          <v-list>
-            <v-list-item
-              v-for="(option, i) in sortOptions"
-              :key="option.text"
-              :active="selectedSort === i"
-              @click="selectedSort = i; page = 1"
-            >
-              <v-list-item-title>{{ option.text }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-col>
-    </v-row>
 
-    <v-divider class="mb-8" />
+
 
     <v-row v-if="filteredProducts.length > 0">
       <v-col
@@ -118,6 +123,8 @@
           @add-to-cart="handleAddToCart(product._id)"
         />
       </v-col>
+      
+      <!-- 頁碼 -->
       <v-col cols="12">
         <v-pagination
           v-model="page"
@@ -170,8 +177,11 @@
   const filteredProducts = computed(() => {
     return products.value.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(search.value.toLowerCase())
+      // 有無符合搜尋的東西=商品名字轉小寫.包括(搜尋關鍵字轉小寫)
       const matchesCategory = selectedCategory.value ? product.category === selectedCategory.value : true
+      // 符合的分類=如有選到分類 判斷商品分類是否=選到的分類，無的話true
       return matchesSearch && matchesCategory
+      // 用&&合併再return出來
     }).sort((a, b) => {
       // .sort()
       // return 0 順序不變
@@ -192,11 +202,16 @@
     })
   })
 
-  const ITEMS_PER_PAGE = 9
+  // 一頁幾個
+  const ITEMS_PER_PAGE = 12
+  // 目前第幾頁
   const page = ref(1)
+  // 全部頁數
   const totalPages = computed(() => {
+    // 過濾後的東西總數/一頁有幾個 無條件進位
     return Math.ceil(filteredProducts.value.length / ITEMS_PER_PAGE)
   })
+  // 目前頁面商品(用slice計算這一頁要顯示的商品)
   const currentPageProducts = computed(() => {
     // .slice(開始索引, 結束索引)
     // 從開始索引取到結束索引，不包含結束
@@ -208,7 +223,7 @@
   })
 
   const search = ref('')
-
+// 全部為空
   const selectedCategory = ref('')
   const categoryOptions = ['貓用', '犬用']
 
