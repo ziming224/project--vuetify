@@ -1,0 +1,1 @@
+import{A as o,c as r,o as t}from"./index-etWUmjSB.js";import{b as e}from"./route-block-B_A1xBdJ.js";const c={__name:"index",setup(a){return o().replace("/member/profile"),(s,p)=>(t(),r("div"))}};typeof e=="function"&&e(c);export{c as default};

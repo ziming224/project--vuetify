@@ -1,0 +1,1 @@
+const t=e=>e&&e!=="undefined"&&e!=="null"?e:"";function n(e){const i=t(e.description);return{_id:e._id,title:e.name,short:i.length>40?i.slice(0,40)+"...":i,detail:i,image:e.image,category:e.category,address:e.address,phone:e.phone,mail:t(e.mail),fb:t(e.fb),website:t(e.website),openingHours:t(e.openingHours)}}export{n as t};
