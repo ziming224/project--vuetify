@@ -284,13 +284,13 @@
       fd.append('name', values.name)
       fd.append('category', values.category)
       fd.append('address', values.address)
-      fd.append('mail', values.mail)
-      fd.append('fb', values.fb)
-      fd.append('website', values.website)
-      fd.append('openingHours', values.openingHours)
-      fd.append('addres', values.addres)
+      // 選填欄位沒填時送空字串，FormData 遇到 undefined 會存成 "undefined" 文字
+      fd.append('mail', values.mail ?? '')
+      fd.append('fb', values.fb ?? '')
+      fd.append('website', values.website ?? '')
+      fd.append('openingHours', values.openingHours ?? '')
       fd.append('phone', values.phone)
-      fd.append('description', values.description)
+      fd.append('description', values.description ?? '')
       fd.append('sell', values.sell)
 
       // 有圖片才放圖片

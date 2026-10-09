@@ -125,7 +125,7 @@
           </v-list-subheader>
           <v-list-item v-if="selected.openingHours" prepend-icon="mdi-clock-outline">
             <v-list-item-title style="white-space: pre-line; line-height: 1.6;">
-              <span v-html="(!selected.openingHours || selected.openingHours === 'undefined') ? '尚未提供' : selected.openingHours.replace(/\n/g, '<br>')"></span>
+              {{ selected.openingHours }}
             </v-list-item-title>
           </v-list-item>
         </v-list>
@@ -142,6 +142,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useSnackbar } from 'vuetify-use-dialog'
+import { toOrgCard } from '@/lib/org'
 import userService from '@/services/user'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia'
@@ -165,24 +166,8 @@ const openDialog = item => {
 const fetchFavorites = async () => {
   try {
     const { data } = await userService.getFavorites()
-    // 後端回傳的資料結構可能與 org.vue 不同，這裡直接使用 result
-    // 並將其轉換為與 org.vue 相同的格式以利 v-dialog 重用
-    favorites.value = data.result.map(org => ({
-      _id: org._id,
-      title: org.name,
-      short: org.description.slice(0, 40) + '...',
-      detail: org.description,
-      short: org.description ? org.description.slice(0, 40) + '...' : '',
-      detail: org.description || '',
-      image: org.image,
-      category: org.category,
-      address: org.address,
-      phone: org.phone,
-      mail: org.mail,
-      fb: org.fb,
-      website: org.website,
-      openingHours: org.openingHours,
-    }))
+    // 轉換成與 org.vue 相同的格式，讓詳細資訊彈窗可以共用
+    favorites.value = data.result.map(org => toOrgCard(org))
     // 同步 Pinia store 中的 favoriteIds
     favoriteIds.value = data.result.map(fav => fav._id)
   } catch (error) {

@@ -49,13 +49,13 @@
                 </v-avatar>
               </template>
               <v-list-item-subtitle>
-                單價: NT$ {{ item.product.price.toLocaleString() }}
+                單價: NT$ {{ unitPrice(item).toLocaleString() }}
               </v-list-item-subtitle>
               <template #append>
                 <div class="text-right">
                   <div>x {{ item.quantity }}</div>
                   <div class="font-weight-bold text-body-1 mt-1">
-                    NT$ {{ (item.product.price * item.quantity).toLocaleString() }}
+                    NT$ {{ (unitPrice(item) * item.quantity).toLocaleString() }}
                   </div>
                 </div>
               </template>
@@ -75,12 +75,15 @@
   const createSnackbar = useSnackbar()
   const orders = ref([])
 
+  // 優先用下單當時記錄的單價；舊訂單沒有記錄，才用商品現在的價格
+  const unitPrice = item => item.price ?? item.product.price
+
   const getOrders = async () => {
     try {
       const { data } = await orderService.getMy()
       orders.value = data.result.map(order => {
         const totalPrice = order.cart.reduce((total, item) => {
-          return total + item.product.price * item.quantity
+          return total + unitPrice(item) * item.quantity
         }, 0)
         return { ...order, totalPrice }
       })

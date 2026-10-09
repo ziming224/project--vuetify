@@ -78,18 +78,8 @@
 
 <!-- 頁尾 -->
     <v-footer class="text-center d-flex flex-column ga-2 py-5" color="footerBackground" padless>
-      <div class="d-flex ">
-        <v-btn
-          v-for="icon in icons"
-          :key="icon"
-          density="comfortable"
-          :icon="icon"
-          variant="text"
-        />
-      </div>
-      <v-divider class="my-2" thickness="2" />
       <div class="text-caption font-weight-regular opacity-60">
-        Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+        毛孩救援站整理全台民間貓狗救援團體資訊，並透過公益商城，把每一筆消費化為救援單位的實際支持。
       </div>
       <v-divider />
       <div>
@@ -122,11 +112,15 @@
   //  載入動畫狀態
   const loading = ref(true)
 
-  // 模擬載入完成 (可改成 API 完成後再關閉)
+  // 瀏覽器載入完成（圖片、字型等）就關閉載入動畫，不固定等待
   onMounted(() => {
-    setTimeout(() => {
+    if (document.readyState === 'complete') {
       loading.value = false
-    }, 2000)
+    } else {
+      window.addEventListener('load', () => {
+        loading.value = false
+      }, { once: true })
+    }
   })
 
   const navItems = computed(() => [
@@ -157,12 +151,6 @@
     await logout()
     drawer.value = false
   }
-  const icons = [
-    'mdi-facebook',
-    'mdi-twitter',
-    'mdi-linkedin',
-    'mdi-instagram',
-  ]
 </script>
 
 <style scoped>

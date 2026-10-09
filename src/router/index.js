@@ -45,7 +45,7 @@ router.beforeEach(async (to, from, next) => {
     next('/')
   } else if (to.meta.login === 'login-only' && !user.isLoggedIn) {
     // 去登入限定頁面，且使用者沒有登入，導航到登入頁
-    next('/login')
+    next('/auth')
   } else if (to.meta.admin && !user.isAdmin) {
     // 去管理員限定頁面，且使用者不是管理員，導航回首頁
     next('/')

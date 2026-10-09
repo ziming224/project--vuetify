@@ -34,8 +34,8 @@ export default defineConfig({
       },
       // 網站設定
       manifest: {
-        name: 'MyWebSite',
-        short_name: 'MySite',
+        name: '毛孩救援站',
+        short_name: '毛孩救援站',
         icons: [
           {
             src: '/web-app-manifest-144x144.png',

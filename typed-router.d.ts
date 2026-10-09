@@ -30,7 +30,6 @@ declare module 'vue-router/auto-routes' {
     '/member/favorites': RouteRecordInfo<'/member/favorites', '/member/favorites', Record<never, never>, Record<never, never>>,
     '/member/orders': RouteRecordInfo<'/member/orders', '/member/orders', Record<never, never>, Record<never, never>>,
     '/member/profile': RouteRecordInfo<'/member/profile', '/member/profile', Record<never, never>, Record<never, never>>,
-    '/orders': RouteRecordInfo<'/orders', '/orders', Record<never, never>, Record<never, never>>,
     '/org': RouteRecordInfo<'/org', '/org', Record<never, never>, Record<never, never>>,
     '/product/[id]': RouteRecordInfo<'/product/[id]', '/product/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/shop': RouteRecordInfo<'/shop', '/shop', Record<never, never>, Record<never, never>>,

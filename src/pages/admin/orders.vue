@@ -34,11 +34,11 @@
     { title: '日期', key: 'createdAt', value: item => new Date(item.createdAt).toLocaleString() },
     { title: '使用者', key: 'user', value: item => item.user.account },
     { title: '商品', key: 'cart', sortable: false },
-    { title: '救援單位', key: 'org', sortable: false },
     {
       title: '總金額',
       key: 'totalPrice',
-      value: item => item.cart.reduce((total, item) => total + item.product.price * item.quantity, 0),
+      // 優先用下單當時記錄的單價；舊訂單沒有記錄，才用商品現在的價格
+      value: item => item.cart.reduce((total, item) => total + (item.price ?? item.product.price) * item.quantity, 0),
     },
   ]
 

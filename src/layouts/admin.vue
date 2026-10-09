@@ -27,9 +27,9 @@
 
   const navItems = [
     { title: '首頁', to: '/', icon: 'mdi-home' },
+    { title: '管理首頁', to: '/admin' },
     { title: '救援單位管理', to: '/admin/orgs' },
     { title: '商城管理', to: '/admin/products' },
     { title: '訂單資料', to: '/admin/orders' },
-    { title: '會員管理', to: '/admin' },
   ]
 </script>

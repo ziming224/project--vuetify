@@ -24,6 +24,7 @@ export function registerPlugins (app) {
       },
     })
     .use(VueFileAgentNext)
-    .use(router)
+    // pinia 要在 router 之前，導航守衛才拿得到 user store
     .use(pinia)
+    .use(router)
 }

@@ -159,14 +159,11 @@
   import heroImage from '@/assets/dog-face.jpg'
   import HeroSection from '@/components/HeroSection.vue'
   import ProductCard from '@/components/ProductCard.vue'
+  import { donationUnit } from '@/lib/donation'
   import productService from '@/services/product'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
 
-  const donationUnit = ref({
-    name: '浪浪狗狗之家',
-    description: '致力於救援與照顧流浪動物',
-  })
   const announcementDialog = ref(false)
   const createSnackbar = useSnackbar()
   const user = useUserStore()
@@ -176,7 +173,8 @@
   const products = ref([])
   const filteredProducts = computed(() => {
     return products.value.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(search.value.toLowerCase())
+      // 搜尋框按 ✕ 清除時 search 會變成 null，所以用 || '' 保護
+      const matchesSearch = product.name.toLowerCase().includes((search.value || '').toLowerCase())
       // 有無符合搜尋的東西=商品名字轉小寫.包括(搜尋關鍵字轉小寫)
       const matchesCategory = selectedCategory.value ? product.category === selectedCategory.value : true
       // 符合的分類=如有選到分類 判斷商品分類是否=選到的分類，無的話true

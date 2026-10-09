@@ -21,7 +21,7 @@
 
 <script setup>
   import { provide, ref } from 'vue'
-  import { useMouseState } from '@/compoonents/3D/useMouseState.JS'
+  import { useMouseState } from '@/components/3D/useMouseState.JS'
 
   defineProps({
     class: String,

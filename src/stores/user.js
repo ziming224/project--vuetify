@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const account = ref('')
+  const email = ref('')
   const cartTotal = ref(0)
   const role = ref('user')
   const token = ref('')
@@ -14,6 +15,7 @@ export const useUserStore = defineStore('user', () => {
   // 登入執行login的function，換資料
   const login = data => {
     account.value = data.account
+    email.value = data.email || ''
     cartTotal.value = data.cartTotal
     role.value = data.role
 
@@ -26,6 +28,7 @@ export const useUserStore = defineStore('user', () => {
 
   const logout = () => {
     account.value = ''
+    email.value = ''
     cartTotal.value = 0
     role.value = 'user'
     token.value = ''
@@ -33,6 +36,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     account,
+    email,
     cartTotal,
     role,
     token,

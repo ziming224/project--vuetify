@@ -12,17 +12,6 @@
       </v-col>
       <v-col cols="12" md="6">
         <h1 class="text-h4 font-weight-bold mb-2">{{ product.name }}</h1>
-        <div class="d-flex align-center mb-4">
-          <v-rating
-            color="amber"
-            density="compact"
-            half-increments
-            :model-value="4.5"
-            readonly
-            size="small"
-          />
-          <div class="text-grey ms-2">4.5 (413)</div>
-        </div>
         <p class="text-body-1 my-6" style="white-space: pre-wrap;">{{ product.description }}</p>
 
         <div class="text-h5 font-weight-bold mb-6">
@@ -34,6 +23,7 @@
             v-model="quantity"
             control-variant="split"
             hide-details
+            :max="product.stock"
             :min="1"
             style="max-width: 200px;"
             variant="outlined"
@@ -41,12 +31,12 @@
           <v-btn
             v-if="user.isLoggedIn"
             color="buttonBackground"
-            :disabled="!product.sell"
+            :disabled="!product.sell || soldOut"
             prepend-icon="mdi-cart-plus"
             size="large"
             @click="addToCart"
           >
-            加入購物車
+            {{ soldOut ? '已售完' : '加入購物車' }}
           </v-btn>
           <v-btn
             v-else
@@ -60,9 +50,23 @@
         </div>
         <div class="mt-6">
           <p class="text-subtitle-1 font-weight-bold">分享給朋友</p>
-          <v-btn color="blue-darken-2" icon="mdi-facebook" variant="text" />
-          <v-btn color="blue-lighten-1" icon="mdi-twitter" variant="text" />
-          <v-btn color="purple-lighten-1" icon="mdi-instagram" variant="text" />
+          <v-btn
+            color="blue-darken-2"
+            :href="shareLinks.facebook"
+            icon="mdi-facebook"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="text"
+          />
+          <v-btn
+            color="blue-lighten-1"
+            :href="shareLinks.twitter"
+            icon="mdi-twitter"
+            rel="noopener noreferrer"
+            target="_blank"
+            variant="text"
+          />
+          <v-btn color="purple-lighten-1" icon="mdi-instagram" variant="text" @click="copyLink" />
         </div>
       </v-col>
     </v-row>
@@ -85,7 +89,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
   import { useRoute, useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
   import productService from '@/services/product'
@@ -111,7 +115,7 @@
       const { data } = await productService.getId(route.params.id)
       Object.assign(product.value, data.product)
 
-      document.title = `${data.product.name} | 購物網站`
+      document.title = `${data.product.name} | 毛孩救援站`
     } catch (error) {
       console.error('Error fetching product:', error)
       createSnackbar({
@@ -124,6 +128,37 @@
     }
   }
   getProduct()
+
+  // 有庫存資料且為 0 才算售完（舊商品可能沒有 stock 欄位）
+  const soldOut = computed(() => typeof product.value.stock === 'number' && product.value.stock < 1)
+
+  // 分享：Facebook、Twitter 開啟分享網址；Instagram 沒有網頁分享功能，改成複製連結
+  const shareLinks = computed(() => {
+    const url = encodeURIComponent(window.location.href)
+    const text = encodeURIComponent(`${product.value.name} | 毛孩救援站`)
+    return {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+    }
+  })
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      createSnackbar({
+        text: '已複製商品連結，可以貼到 Instagram 分享',
+        snackbarProps: {
+          color: 'green',
+        },
+      })
+    } catch {
+      createSnackbar({
+        text: '複製失敗，請手動複製網址',
+        snackbarProps: {
+          color: 'red',
+        },
+      })
+    }
+  }
 
   const quantity = ref(1)
   const addToCart = async () => {

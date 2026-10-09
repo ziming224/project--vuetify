@@ -8,7 +8,7 @@
       closable
       close-label="關閉公告"
       color="info"
-      title="本月合作單位:趙媽媽狗園（社團法人高雄市愛護流浪狗協會)"
+      :title="`本月合作單位：${donationUnit.name}`"
       variant="tonal"
     >
 
@@ -57,6 +57,7 @@
                     control-variant="split"
                     density="compact"
                     hide-details
+                    :max="item.product.stock"
                     :min="1"
                     :model-value="item.quantity"
                     style="max-width: 150px"
@@ -109,6 +110,7 @@
   import { computed, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useSnackbar } from 'vuetify-use-dialog'
+  import { donationUnit } from '@/lib/donation'
   import orderService from '@/services/order'
   import userService from '@/services/user'
   import { useUserStore } from '@/stores/user'
@@ -137,6 +139,8 @@
   onMounted(getCart)
 
   const updateCart = async (newValue, item, i) => {
+    // 數量欄位被清空時是 null，不送出（否則會被當成把數量減到 0 而刪掉商品）
+    if (typeof newValue !== 'number' || Number.isNaN(newValue)) return
     try {
       const { data } = await userService.cart({ // Assuming this is a POST request now
         product: item.product._id,
@@ -175,7 +179,7 @@
     try {
       await orderService.create()
       user.cartTotal = 0
-      router.push('/orders')
+      router.push('/member/orders')
     } catch (error) {
       console.error(error)
       createSnackbar({

@@ -247,7 +247,8 @@
       fd.append('name', values.name)
       fd.append('price', values.price)
       fd.append('stock', values.stock)
-      fd.append('description', values.description)
+      // 描述選填，沒填時送空字串，避免存成 "undefined" 文字
+      fd.append('description', values.description ?? '')
       fd.append('sell', values.sell)
 
       // 有圖片才放圖片

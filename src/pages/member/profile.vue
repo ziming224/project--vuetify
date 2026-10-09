@@ -28,8 +28,8 @@
     <v-text-field
       v-model="form.newPassword"
       class="mb-4"
-      label="變更密碼"
-      :rules="[rules.required, rules.minLength]"
+      label="變更密碼（不改請留空）"
+      :rules="[rules.newPassword]"
       type="password"
       variant="outlined"
     />
@@ -66,6 +66,9 @@
       const pattern = /.+@.+\..+/
       return pattern.test(value) || '信箱格式不正確'
     },
+    minLength: value => (value?.length >= 4) || '密碼至少需要 4 個字元',
+    // 新密碼選填，有填才檢查長度（跟後端 models/user.js 一樣 4~20 字）
+    newPassword: value => !value || (value.length >= 4 && value.length <= 20) || '密碼長度必須在 4 到 20 個字元之間',
   }
 
   const submitForm = async () => {
@@ -73,12 +76,15 @@
 
     isLoading.value = true
     try {
-      // 假設您的 userService 中有一個 updateProfile 的方法來更新資料
-      // 我們只送出可以被使用者修改的欄位，例如 email
-      await userService.updateProfile({ email: form.value.email })
+      // 後端用原始密碼確認身分；新密碼沒填就不送，只改信箱
+      const { data } = await userService.updateProfile({
+        email: form.value.email,
+        password: form.value.password,
+        newPassword: form.value.newPassword || undefined,
+      })
 
       // 後端更新成功後，同步更新 Pinia store 中的資料，讓整個網站的狀態保持一致
-      user.email = form.value.email
+      user.email = data.user.email
 
       createSnackbar({
         text: '個人資料更新成功！',
